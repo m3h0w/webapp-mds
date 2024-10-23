@@ -23,7 +23,8 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "types": ["tailwindcss"]
   },
   "exclude": ["node_modules"],
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"]
