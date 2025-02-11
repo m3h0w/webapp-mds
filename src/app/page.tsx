@@ -97,7 +97,7 @@ const D3Flow: React.FC = () => {
 
 export default function Home() {
   return (
-    <main className="w-full h-screen">
+    <main className="h-screen w-full">
       <D3Flow />
     </main>
   );

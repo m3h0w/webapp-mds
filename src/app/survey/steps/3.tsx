@@ -13,7 +13,7 @@ interface Page3Props {
 }
 
 const Page3 = ({ register, errors, trigger, onBack }: Page3Props) => {
-  const handleSubmit = async () => {
+  const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     // Trigger validation for all fields on this page
     const isValid = await trigger([
       'psychedelicUse',
@@ -23,7 +23,7 @@ const Page3 = ({ register, errors, trigger, onBack }: Page3Props) => {
     ]);
     if (!isValid) {
       // Prevent form submission if validation fails
-      event?.preventDefault();
+      event.preventDefault();
     }
   };
 
