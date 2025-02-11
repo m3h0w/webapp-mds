@@ -1,14 +1,32 @@
-import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form';
+import {
+  FieldErrors,
+  FieldValues,
+  UseFormRegister,
+  UseFormTrigger,
+} from 'react-hook-form';
 
 import ComparisonQuestion from '../components/ComparisonQuestion';
 
 interface Page1Props {
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors<FieldValues>;
+  trigger: UseFormTrigger<FieldValues>;
   onNext: () => void;
 }
 
-const Page1 = ({ register, errors, onNext }: Page1Props) => {
+const Page1 = ({ register, errors, trigger, onNext }: Page1Props) => {
+  const handleNext = async () => {
+    // Trigger validation for all fields on this page
+    const isValid = await trigger([
+      'visualComparison',
+      'intensity',
+      'frequency',
+    ]);
+    if (isValid) {
+      onNext();
+    }
+  };
+
   return (
     <>
       <div className="space-y-8">
@@ -88,7 +106,7 @@ const Page1 = ({ register, errors, onNext }: Page1Props) => {
       <div className="flex justify-end">
         <button
           type="button"
-          onClick={onNext}
+          onClick={handleNext}
           className="rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
         >
           Next

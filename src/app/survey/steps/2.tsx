@@ -1,13 +1,27 @@
-import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form';
+import {
+  FieldErrors,
+  FieldValues,
+  UseFormRegister,
+  UseFormTrigger,
+} from 'react-hook-form';
 
 interface Page2Props {
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors<FieldValues>;
+  trigger: UseFormTrigger<FieldValues>;
   onBack: () => void;
   onNext: () => void;
 }
 
-const Page2 = ({ register, errors, onBack, onNext }: Page2Props) => {
+const Page2 = ({ register, errors, trigger, onBack, onNext }: Page2Props) => {
+  const handleNext = async () => {
+    // Trigger validation for all fields on this page
+    const isValid = await trigger(['recommend', 'aspects']);
+    if (isValid) {
+      onNext();
+    }
+  };
+
   return (
     <>
       <div className="space-y-6">
@@ -93,7 +107,7 @@ const Page2 = ({ register, errors, onBack, onNext }: Page2Props) => {
         </button>
         <button
           type="button"
-          onClick={onNext}
+          onClick={handleNext}
           className="rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
         >
           Dalej

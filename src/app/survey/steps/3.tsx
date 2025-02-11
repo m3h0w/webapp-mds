@@ -1,12 +1,32 @@
-import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form';
+import {
+  FieldErrors,
+  FieldValues,
+  UseFormRegister,
+  UseFormTrigger,
+} from 'react-hook-form';
 
 interface Page3Props {
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors<FieldValues>;
+  trigger: UseFormTrigger<FieldValues>;
   onBack: () => void;
 }
 
-const Page3 = ({ register, errors, onBack }: Page3Props) => {
+const Page3 = ({ register, errors, trigger, onBack }: Page3Props) => {
+  const handleSubmit = async () => {
+    // Trigger validation for all fields on this page
+    const isValid = await trigger([
+      'psychedelicUse',
+      'vrUse',
+      'eyeDominance',
+      'experimentId',
+    ]);
+    if (!isValid) {
+      // Prevent form submission if validation fails
+      event?.preventDefault();
+    }
+  };
+
   return (
     <>
       <div className="space-y-8">
@@ -143,6 +163,7 @@ const Page3 = ({ register, errors, onBack }: Page3Props) => {
         </button>
         <button
           type="submit"
+          onClick={handleSubmit}
           className="rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
         >
           Zakończ ankietę

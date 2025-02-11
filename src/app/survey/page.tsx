@@ -13,6 +13,7 @@ const SurveyPage = () => {
     register,
     handleSubmit,
     formState: { errors },
+    trigger,
   } = useForm();
 
   const onSubmit = (data: FieldValues) => {
@@ -53,12 +54,14 @@ const SurveyPage = () => {
             <Page1
               register={register}
               errors={errors}
+              trigger={trigger}
               onNext={() => setCurrentPage(2)}
             />
           ) : currentPage === 2 ? (
             <Page2
               register={register}
               errors={errors}
+              trigger={trigger}
               onBack={() => setCurrentPage(1)}
               onNext={() => setCurrentPage(3)}
             />
@@ -66,6 +69,7 @@ const SurveyPage = () => {
             <Page3
               register={register}
               errors={errors}
+              trigger={trigger}
               onBack={() => setCurrentPage(2)}
             />
           )}
