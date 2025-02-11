@@ -15,8 +15,8 @@ const Page1 = ({ register, errors, onNext }: Page1Props) => {
         <ComparisonQuestion
           register={register}
           name="visualComparison"
-          leftMedia="/path/to/your/left-video.gif"
-          rightMedia="/path/to/your/right-video.gif"
+          leftMedia="/1.webp"
+          rightMedia="/2.webp"
           question="How different are these two visual patterns?"
         />
 
