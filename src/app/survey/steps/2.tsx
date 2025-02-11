@@ -4,9 +4,10 @@ interface Page2Props {
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors<FieldValues>;
   onBack: () => void;
+  onNext: () => void;
 }
 
-const Page2 = ({ register, errors, onBack }: Page2Props) => {
+const Page2 = ({ register, errors, onBack, onNext }: Page2Props) => {
   return (
     <>
       <div className="space-y-6">
@@ -91,10 +92,11 @@ const Page2 = ({ register, errors, onBack }: Page2Props) => {
           Back
         </button>
         <button
-          type="submit"
+          type="button"
+          onClick={onNext}
           className="rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
         >
-          Submit Survey
+          Dalej
         </button>
       </div>
     </>

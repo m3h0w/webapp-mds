@@ -5,6 +5,7 @@ import { FieldValues, useForm } from 'react-hook-form';
 
 import Page1 from './steps/1';
 import Page2 from './steps/2';
+import Page3 from './steps/3';
 
 const SurveyPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -54,11 +55,18 @@ const SurveyPage = () => {
               errors={errors}
               onNext={() => setCurrentPage(2)}
             />
-          ) : (
+          ) : currentPage === 2 ? (
             <Page2
               register={register}
               errors={errors}
               onBack={() => setCurrentPage(1)}
+              onNext={() => setCurrentPage(3)}
+            />
+          ) : (
+            <Page3
+              register={register}
+              errors={errors}
+              onBack={() => setCurrentPage(2)}
             />
           )}
         </form>
