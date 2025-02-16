@@ -4,156 +4,86 @@ import {
   UseFormRegister,
   UseFormTrigger,
 } from 'react-hook-form';
+import { useMemo } from 'react';
+
+import SingleMediaQuestion from '../components/SingleMediaQuestion';
 
 interface Page3Props {
   register: UseFormRegister<FieldValues>;
   errors: FieldErrors<FieldValues>;
   trigger: UseFormTrigger<FieldValues>;
   onBack: () => void;
+  onNext: () => void;
 }
 
-const Page3 = ({ register, errors, trigger, onBack }: Page3Props) => {
-  const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    // Trigger validation for all fields on this page
+const PYTANIE =
+  'Dla poniższych efektów zniekształcenia obrazu oceń na ile podobały Ci się one wizualnie, tak że miałaś/miałeś przyjemność z ich oglądania? ';
+
+const Page3 = ({ register, errors, trigger, onBack, onNext }: Page3Props) => {
+  const questions = useMemo(() => {
+    const questionData = [
+      {
+        name: 'singleVisual1',
+        media: ['/1.webp', '/2.webp', '/1.webp', '/2.webp', '/1.webp'],
+      },
+      {
+        name: 'singleVisual2',
+        media: ['/2.webp', '/1.webp', '/2.webp', '/1.webp', '/2.webp'],
+      },
+      {
+        name: 'singleVisual3',
+        media: ['/1.webp', '/2.webp', '/1.webp', '/2.webp', '/1.webp'],
+      },
+      {
+        name: 'singleVisual4',
+        media: ['/2.webp', '/1.webp', '/2.webp', '/1.webp', '/2.webp'],
+      },
+      {
+        name: 'singleVisual5',
+        media: ['/1.webp', '/2.webp', '/1.webp', '/2.webp', '/1.webp'],
+      },
+      {
+        name: 'singleVisual6',
+        media: ['/2.webp', '/1.webp', '/2.webp', '/1.webp', '/2.webp'],
+      },
+    ];
+
+    return [...questionData].sort(() => Math.random() - 0.5);
+  }, []);
+
+  const handleNext = async () => {
     const isValid = await trigger([
-      'psychedelicUse',
-      'vrUse',
-      'eyeDominance',
-      'experimentId',
+      'singleVisual1',
+      'singleVisual2',
+      'singleVisual3',
+      'singleVisual4',
+      'singleVisual5',
+      'singleVisual6',
     ]);
-    if (!isValid) {
-      // Prevent form submission if validation fails
-      event.preventDefault();
+    if (isValid) {
+      onNext();
     }
   };
 
   return (
-    <>
-      <div className="space-y-8">
-        <p className="italic text-gray-700">
-          Twoje odpowiedzi są anonimowe i będą użyte wyłącznie potrzeby badań.
-        </p>
-
-        <div>
-          <label htmlFor="psychedelicUse" className="mb-2 block font-medium">
-            Czy kiedykolwiek używałeś/aś klasycznych substancji psychodelicznych
-            (takich jak grzyby psylocybinowe lub LSD) w dawkach wywołujących
-            halucynacje wzrokowe?*
-          </label>
-          <div className="space-y-2">
-            {[
-              'Nigdy',
-              '1 raz',
-              '2-4 razy',
-              '4-10 razy',
-              'więcej niż 10 razy',
-              'Wolę nie odpowiadać',
-            ].map((option) => (
-              <label key={option} className="flex items-center">
-                <input
-                  type="radio"
-                  {...register('psychedelicUse', {
-                    required: 'To pole jest wymagane',
-                  })}
-                  value={option}
-                  className="mr-2"
-                />
-                {option}
-              </label>
-            ))}
-          </div>
-          {errors.psychedelicUse && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.psychedelicUse.message as string}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label htmlFor="vrUse" className="mb-2 block font-medium">
-            Czy kiedykolwiek używałeś gogli do wirtualnej rzeczywistości (do
-            gier lub oglądania treści)?*
-          </label>
-          <div className="space-y-2">
-            {[
-              'Nigdy',
-              '1 raz',
-              '2-4 razy',
-              '4-10 razy',
-              'więcej niż 10 razy',
-              'Wolę nie odpowiadać',
-            ].map((option) => (
-              <label key={option} className="flex items-center">
-                <input
-                  type="radio"
-                  {...register('vrUse', {
-                    required: 'To pole jest wymagane',
-                  })}
-                  value={option}
-                  className="mr-2"
-                />
-                {option}
-              </label>
-            ))}
-          </div>
-          {errors.vrUse && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.vrUse.message as string}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label htmlFor="eyeDominance" className="mb-2 block font-medium">
-            Dominacja oczna:*
-          </label>
-          <div className="flex gap-4">
-            {['Lewe oko', 'Prawe oko'].map((option) => (
-              <label key={option} className="flex items-center">
-                <input
-                  type="radio"
-                  {...register('eyeDominance', {
-                    required: 'To pole jest wymagane',
-                  })}
-                  value={option}
-                  className="mr-2"
-                />
-                {option}
-              </label>
-            ))}
-          </div>
-          {errors.eyeDominance && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.eyeDominance.message as string}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label htmlFor="experimentId" className="mb-2 block font-medium">
-            ID eksperymentu:*
-          </label>
-          <input
-            type="text"
-            {...register('experimentId', {
-              required: 'To pole jest wymagane',
-              pattern: {
-                value: /^[0-9]{2}$/,
-                message: 'ID musi być w formacie 01-99',
-              },
-            })}
-            className="w-20 rounded-md border border-gray-300 p-2"
-            placeholder="01-99"
+    <div className="grid grid-cols-1 gap-16 px-4 md:grid-cols-1">
+      {questions.map((q) => (
+        <div
+          key={q.name}
+          className="mx-auto"
+          style={{ width: '92vw', height: '100vh' }}
+        >
+          <SingleMediaQuestion
+            key={q.name}
+            register={register}
+            name={q.name}
+            media={q.media}
+            question={PYTANIE}
           />
-          {errors.experimentId && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.experimentId.message as string}
-            </p>
-          )}
         </div>
-      </div>
+      ))}
 
-      <div className="mt-8 flex justify-between">
+      <div className="flex justify-between">
         <button
           type="button"
           onClick={onBack}
@@ -162,14 +92,14 @@ const Page3 = ({ register, errors, trigger, onBack }: Page3Props) => {
           Wstecz
         </button>
         <button
-          type="submit"
-          onClick={handleSubmit}
+          type="button"
+          onClick={handleNext}
           className="rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
         >
-          Zakończ ankietę
+          Dalej
         </button>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -4,6 +4,7 @@ import {
   UseFormRegister,
   UseFormTrigger,
 } from 'react-hook-form';
+import { useMemo } from 'react';
 
 import ComparisonQuestion from '../components/ComparisonQuestion';
 
@@ -15,10 +16,61 @@ interface Page1Props {
 }
 
 const Page1 = ({ register, errors, trigger, onNext }: Page1Props) => {
+  const questions = useMemo(() => {
+    const media1 = [
+      '/1-output.gif',
+      '/2-output.gif',
+      '/1-output.gif',
+      '/2-output.gif',
+      '/1-output.gif',
+    ];
+    const media2 = [
+      '/3-output.gif',
+      '/4-output.gif',
+      '/3-output.gif',
+      '/4-output.gif',
+      '/3-output.gif',
+    ];
+    const media3 = [
+      '/5-output.gif',
+      '/6-output.gif',
+      '/5-output.gif',
+      '/6-output.gif',
+      '/5-output.gif',
+    ];
+    const questionData = [
+      {
+        name: 'visualComparison1',
+        mediaA: media1,
+        mediaB: media2,
+      },
+      {
+        name: 'visualComparison2',
+        mediaA: media3,
+        mediaB: media1,
+      },
+      {
+        name: 'visualComparison3',
+        mediaA: media3,
+        mediaB: media2,
+      },
+    ];
+
+    // Randomize both question order and left/right media order
+    return [...questionData]
+      .sort(() => Math.random() - 0.5)
+      .map(({ name, mediaA, mediaB }) => ({
+        name,
+        leftMedia: Math.random() < 0.5 ? mediaA : mediaB,
+        rightMedia: Math.random() < 0.5 ? mediaB : mediaA,
+      }));
+  }, []);
+
   const handleNext = async () => {
-    // Trigger validation for all fields on this page
     const isValid = await trigger([
-      'visualComparison',
+      'visualComparison1',
+      'visualComparison2',
+      'visualComparison3',
       'intensity',
       'frequency',
     ]);
@@ -28,17 +80,25 @@ const Page1 = ({ register, errors, trigger, onNext }: Page1Props) => {
   };
 
   return (
-    <>
-      <div className="space-y-8">
-        <ComparisonQuestion
-          register={register}
-          name="visualComparison"
-          leftMedia="/1.webp"
-          rightMedia="/2.webp"
-          question="How different are these two visual patterns?"
-        />
+    <div className="grid grid-cols-1 gap-16 px-4 md:grid-cols-1">
+      {questions.map((q) => (
+        <div
+          key={q.name}
+          className="mx-auto"
+          style={{ width: '92vw', height: '100vh' }}
+        >
+          <ComparisonQuestion
+            key={q.name}
+            register={register}
+            name={q.name}
+            leftMedia={q.leftMedia}
+            rightMedia={q.rightMedia}
+            question="Na ile przedstawione efekty zniekształceń obrazu różnią się od siebie wizualnie w Twojej ocenie?"
+          />
+        </div>
+      ))}
 
-        <div>
+      {/* <div>
           <label htmlFor="intensity" className="mb-2 block font-medium">
             How intense was your most recent psychedelic experience?*
           </label>
@@ -63,9 +123,9 @@ const Page1 = ({ register, errors, trigger, onNext }: Page1Props) => {
               {errors.intensity.message as string}
             </p>
           )}
-        </div>
+        </div> */}
 
-        <div>
+      {/* <div>
           <label htmlFor="frequency" className="mb-2 block font-medium">
             How frequently do you engage in psychedelic experiences?*
           </label>
@@ -88,9 +148,9 @@ const Page1 = ({ register, errors, trigger, onNext }: Page1Props) => {
               {errors.frequency.message as string}
             </p>
           )}
-        </div>
+        </div> */}
 
-        <div>
+      {/* <div>
           <label htmlFor="insights" className="mb-2 block font-medium">
             Describe any notable insights from your experiences:
           </label>
@@ -101,7 +161,7 @@ const Page1 = ({ register, errors, trigger, onNext }: Page1Props) => {
             className="w-full rounded-md border border-gray-300 p-2"
           />
         </div>
-      </div>
+      </div> */}
 
       <div className="flex justify-end">
         <button
@@ -109,10 +169,10 @@ const Page1 = ({ register, errors, trigger, onNext }: Page1Props) => {
           onClick={handleNext}
           className="rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
         >
-          Next
+          Dalej
         </button>
       </div>
-    </>
+    </div>
   );
 };
 

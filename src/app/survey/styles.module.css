@@ -5,11 +5,11 @@
   --sv-main-color: #111827;
   --sv-page-background-color: #ffffff;
   width: 100%;
-  padding: 2rem;
+  /* padding: 2rem; */
 }
 
 .surveyContainer :global(.sv-container-modern) {
-  max-width: 800px;
+  /* max-width: 800px; */
   margin: 0 auto;
 }
 
@@ -23,4 +23,4 @@
 
 .surveyContainer :global(.sv-dropdown) {
   @apply w-full p-2 border border-gray-300 rounded-md;
-} 
+}

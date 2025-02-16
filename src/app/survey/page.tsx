@@ -6,9 +6,11 @@ import { FieldValues, useForm } from 'react-hook-form';
 import Page1 from './steps/1';
 import Page2 from './steps/2';
 import Page3 from './steps/3';
+import Page4 from './steps/4';
+import Page0 from '@/app/survey/steps/0';
 
 const SurveyPage = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const {
     register,
     handleSubmit,
@@ -36,41 +38,80 @@ const SurveyPage = () => {
     document.body.removeChild(link);
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mx-auto max-w-[800px] bg-white">
+    <div className="container mx-auto py-8">
+      <div className="mx-auto bg-white">
         <div className="mb-8">
-          <h1 className="mb-4 text-2xl font-bold">
-            Psychedelic Experience Survey
-          </h1>
-          <p className="mb-8 text-gray-700">
-            Please help us improve our psychedelic experiences by taking this
-            quick survey
-          </p>
+          {currentPage > 0 && (
+            <h1 className="mb-4 w-full text-center text-2xl font-bold">
+              Ankieta percepcji zniekształceń wizualnych{' '}
+              {currentPage == 0 ? '' : `(Strona ${currentPage})`}
+            </h1>
+          )}
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {currentPage === 1 ? (
+          {currentPage === 0 ? (
+            <Page0
+              register={register}
+              errors={errors}
+              trigger={trigger}
+              onNext={() => {
+                setCurrentPage(1);
+                scrollToTop();
+              }}
+            />
+          ) : currentPage === 1 ? (
             <Page1
               register={register}
               errors={errors}
               trigger={trigger}
-              onNext={() => setCurrentPage(2)}
+              onNext={() => {
+                setCurrentPage(2);
+                scrollToTop();
+              }}
             />
           ) : currentPage === 2 ? (
             <Page2
               register={register}
               errors={errors}
               trigger={trigger}
-              onBack={() => setCurrentPage(1)}
-              onNext={() => setCurrentPage(3)}
+              onBack={() => {
+                setCurrentPage(1);
+                scrollToTop();
+              }}
+              onNext={() => {
+                setCurrentPage(3);
+                scrollToTop();
+              }}
             />
-          ) : (
+          ) : currentPage === 3 ? (
             <Page3
               register={register}
               errors={errors}
               trigger={trigger}
-              onBack={() => setCurrentPage(2)}
+              onBack={() => {
+                setCurrentPage(2);
+                scrollToTop();
+              }}
+              onNext={() => {
+                setCurrentPage(4);
+                scrollToTop();
+              }}
+            />
+          ) : (
+            <Page4
+              register={register}
+              errors={errors}
+              trigger={trigger}
+              onBack={() => {
+                setCurrentPage(3);
+                scrollToTop();
+              }}
             />
           )}
         </form>

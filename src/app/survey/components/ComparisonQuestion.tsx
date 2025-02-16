@@ -5,18 +5,18 @@ import Image from 'next/image';
 interface ComparisonQuestionProps {
   register: UseFormRegister<FieldValues>;
   name: string;
-  leftMedia: string;
-  rightMedia: string;
+  leftMedia: string[];
+  rightMedia: string[];
   question: string;
 }
 
 const marks = [
-  { value: 0, label: 'Nieodróżnialne' },
-  { value: 20, label: 'Nieznacznie różne' },
-  { value: 40, label: 'Istotnie różne' },
-  { value: 60, label: 'Wyraźnie różne' },
-  { value: 80, label: 'Silnie różne' },
-  { value: 100, label: 'Skrajnie różne' },
+  { value: 0, label: 'Wcale' },
+  { value: 20, label: '' },
+  { value: 40, label: '' },
+  { value: 60, label: '' },
+  { value: 80, label: '' },
+  { value: 100, label: 'W bardzo dużym stopniu' },
 ];
 
 const ComparisonQuestion = ({
@@ -27,19 +27,19 @@ const ComparisonQuestion = ({
   question,
 }: ComparisonQuestionProps) => {
   return (
-    <div className="space-y-4">
+    <div className="my-4 space-y-4">
       <style jsx>{`
         input[type='range'] {
-          @apply w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer;
+          @apply w-full h-16 bg-gray-200 rounded-lg appearance-none cursor-pointer;
         }
 
         input[type='range']::-webkit-slider-thumb {
-          @apply w-4 h-4 bg-blue-600 rounded-full appearance-none cursor-pointer;
+          @apply w-20 h-20 bg-blue-600 rounded-full appearance-none cursor-pointer;
           -webkit-appearance: none;
         }
 
         input[type='range']::-moz-range-thumb {
-          @apply w-4 h-4 bg-blue-600 rounded-full cursor-pointer border-0;
+          @apply w-20 h-20 bg-blue-600 rounded-full cursor-pointer border-0;
         }
 
         input[type='range']:focus {
@@ -58,22 +58,30 @@ const ComparisonQuestion = ({
       <h3 className="text-lg font-medium">{question}</h3>
 
       {/* Media comparison container */}
-      <div className="flex justify-between gap-2">
-        <div className="relative aspect-video w-1/2">
-          <Image
-            src={leftMedia}
-            alt="Left comparison"
-            fill
-            className="object-cover"
-          />
+      <div className="flex justify-between gap-8">
+        <div className="grid w-1/2 grid-cols-2 gap-2 rounded-lg border-2 border-black p-4">
+          {leftMedia.map((src, index) => (
+            <div key={`left-${index}`} className="relative aspect-video">
+              <Image
+                src={src}
+                alt={`Left comparison ${index + 1}`}
+                fill
+                className="rounded-lg object-cover"
+              />
+            </div>
+          ))}
         </div>
-        <div className="relative aspect-video w-1/2">
-          <Image
-            src={rightMedia}
-            alt="Right comparison"
-            fill
-            className="object-cover"
-          />
+        <div className="grid w-1/2 grid-cols-2 gap-2 rounded-lg border-2 border-black p-4">
+          {rightMedia.map((src, index) => (
+            <div key={`right-${index}`} className="relative aspect-video">
+              <Image
+                src={src}
+                alt={`Right comparison ${index + 1}`}
+                fill
+                className="rounded-lg object-cover"
+              />
+            </div>
+          ))}
         </div>
       </div>
 
@@ -82,6 +90,7 @@ const ComparisonQuestion = ({
         <input
           style={{
             width: '100%',
+            height: '40px',
           }}
           type="range"
           min="0"
@@ -91,15 +100,21 @@ const ComparisonQuestion = ({
         />
         {/* Marks */}
         <div className="relative mt-2 w-full">
-          <div className="flex justify-between">
+          <div className="flex justify-between px-[10px]">
             {marks.map((mark) => (
               <div
                 key={mark.value}
-                className="flex flex-col items-center"
-                style={{ width: 'auto', minWidth: '60px' }}
+                className="absolute flex flex-col items-center"
+                style={{
+                  left: `${mark.value}%`,
+                  transform: 'translateX(-50%)',
+                  width: mark.label ? '120px' : '40px',
+                }}
               >
                 <span className="text-sm font-medium">{mark.value}</span>
-                <span className="mt-1 text-center text-xs">{mark.label}</span>
+                {mark.label && (
+                  <span className="mt-1 text-center text-xs">{mark.label}</span>
+                )}
               </div>
             ))}
           </div>

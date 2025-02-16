@@ -23,22 +23,22 @@ module.exports = {
     '@typescript-eslint/no-require-imports': 'off',
     '@typescript-eslint/no-unused-vars': 'warn',
     '@typescript-eslint/no-explicit-any': 'off',
-    'simple-import-sort/imports': [
-      2,
-      {
-        groups: [
-          ['^.+\\.s?css$'],
-          [
-            `^(${require('module').builtinModules.join('|')})(/|$)`,
-            '^react',
-            '^@?\\w',
-          ],
-          ['^components(/.*|$)'],
-          ['^lib(/.*|$)', '^hooks(/.*|$)'],
-          ['^\\.'],
-        ],
-      },
-    ],
+    // 'simple-import-sort/imports': [
+    //   2,
+    //   {
+    //     groups: [
+    //       ['^.+\\.s?css$'],
+    //       [
+    //         `^(${require('module').builtinModules.join('|')})(/|$)`,
+    //         '^react',
+    //         '^@?\\w',
+    //       ],
+    //       ['^components(/.*|$)'],
+    //       ['^lib(/.*|$)', '^hooks(/.*|$)'],
+    //       ['^\\.'],
+    //     ],
+    //   },
+    // ],
   },
   settings: {
     tailwindcss: {
