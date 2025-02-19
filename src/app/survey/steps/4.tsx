@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   FieldErrors,
   FieldValues,
@@ -13,6 +14,7 @@ interface Page4Props {
 }
 
 const Page4 = ({ register, errors, trigger, onBack }: Page4Props) => {
+  const [done, setDone] = useState(false);
   const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     // Trigger validation for all fields on this page
     const isValid = await trigger([
@@ -27,18 +29,29 @@ const Page4 = ({ register, errors, trigger, onBack }: Page4Props) => {
     }
   };
 
+  if (done) {
+    return (
+      <div className="flex h-screen flex-col items-center justify-center">
+        <p className="text-2xl font-bold">Serdecznie dziękujemy za udział!</p>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="mx-auto max-w-2xl space-y-8">
-        {/* <p className="italic text-gray-700">
-          Twoje odpowiedzi są anonimowe i będą użyte wyłącznie potrzeby badań.
-        </p> */}
+        <p className="italic text-gray-700">
+          Twoje odpowiedzi są anonimowe i będą użyte wyłącznie na potrzeby
+          badań.
+        </p>
 
         <div>
           <label htmlFor="psychedelicUse" className="mb-2 block font-medium">
-            Czy kiedykolwiek używałeś/aś klasycznych substancji psychodelicznych
-            (takich jak grzyby psylocybinowe lub LSD) w dawkach wywołujących
-            halucynacje wzrokowe?*
+            Czy kiedykolwiek używałaś/-eś klasycznych substancji
+            psychodelicznych (takich jak grzyby psylocybinowe lub LSD) w dawkach
+            wywołujących halucynacje wzrokowe (np. poruszanie się statycznych
+            powierzchni, zniekształcenia obiektów czy widzenie wzorców
+            geometrycznych)?*
           </label>
           <div className="space-y-2">
             {[
@@ -77,10 +90,10 @@ const Page4 = ({ register, errors, trigger, onBack }: Page4Props) => {
           <div className="space-y-2">
             {[
               'Nigdy',
-              '1 raz',
-              '2-4 razy',
-              '4-10 razy',
-              'więcej niż 10 razy',
+              'Raz',
+              'Kilka razy',
+              'Wiele razy',
+              'Regularnie używam',
               'Wolę nie odpowiadać',
             ].map((option) => (
               <label key={option} className="flex items-center">
@@ -106,7 +119,7 @@ const Page4 = ({ register, errors, trigger, onBack }: Page4Props) => {
         <div>
           <label htmlFor="eyeDominance" className="mb-2 block font-medium">
             Poproś osobę prowadzącą badanie o przeprowadzenie krótkiego testu na
-            dominację oczną ^^:*
+            dominację oczną.*
           </label>
           <div className="flex gap-4">
             {['Lewe oko', 'Prawe oko'].map((option) => (
@@ -154,7 +167,9 @@ const Page4 = ({ register, errors, trigger, onBack }: Page4Props) => {
         </div> */}
       </div>
 
-      <div className="mt-8 flex justify-between">
+      {/* <p className="mt-8 text-center">Serdecznie dziękujemy za udział!</p> */}
+
+      <div className="mt-8 flex justify-center gap-4">
         <button
           type="button"
           onClick={onBack}
@@ -164,7 +179,19 @@ const Page4 = ({ register, errors, trigger, onBack }: Page4Props) => {
         </button>
         <button
           type="submit"
-          onClick={handleSubmit}
+          onClick={async (e: any) => {
+            await handleSubmit(e);
+            // check if valid
+            const isValid = await trigger([
+              'psychedelicUse',
+              'vrUse',
+              'eyeDominance',
+              'experimentId',
+            ]);
+            if (isValid) {
+              setDone(true);
+            }
+          }}
           className="rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
         >
           Zakończ ankietę

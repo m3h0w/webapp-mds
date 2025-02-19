@@ -43,16 +43,16 @@ const SurveyPage = () => {
   };
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-2">
       <div className="mx-auto bg-white">
-        <div className="mb-8">
+        {/* <div className="mb-8">
           {currentPage > 0 && (
             <h1 className="mb-4 w-full text-center text-2xl font-bold">
               Ankieta percepcji zniekształceń wizualnych{' '}
               {currentPage == 0 ? '' : `(Strona ${currentPage})`}
             </h1>
           )}
-        </div>
+        </div> */}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {currentPage === 0 ? (

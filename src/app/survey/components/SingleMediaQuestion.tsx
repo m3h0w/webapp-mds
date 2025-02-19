@@ -6,7 +6,8 @@ interface SingleMediaQuestionProps {
   register: UseFormRegister<FieldValues>;
   name: string;
   media: string[];
-  question: string;
+  question: string | React.ReactNode;
+  compact?: boolean;
 }
 
 const marks = [
@@ -23,9 +24,10 @@ const SingleMediaQuestion = ({
   name,
   media,
   question,
+  compact = false,
 }: SingleMediaQuestionProps) => {
   return (
-    <div className="my-4 space-y-4">
+    <div className={`space-y-2 ${compact ? 'my-0' : 'my-4'} pb-2`}>
       <style jsx>{`
         input[type='range'] {
           @apply w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer;
@@ -53,27 +55,16 @@ const SingleMediaQuestion = ({
         }
       `}</style>
 
-      <h3 className="text-lg font-medium">{question}</h3>
+      {/* Only show question text if not in compact mode */}
+      {!compact && <h3 className="text-lg font-medium">{question}</h3>}
 
-      {/* Media container */}
-      <div className="grid grid-cols-3 gap-2">
-        {media.map((src, index) => (
-          <div key={index} className="relative aspect-video">
-            <Image
-              src={src}
-              alt={`Media ${index + 1}`}
-              fill
-              className="rounded-lg object-cover"
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* Slider container */}
-      <div className="mt-8 w-full">
+      {/* Compact version only shows the slider and labels */}
+      <div className="w-full">
+        <div className="mb-0 text-sm font-medium">{question}</div>
         <input
           style={{
             width: '100%',
+            height: '40px',
           }}
           type="range"
           min="0"
@@ -82,8 +73,13 @@ const SingleMediaQuestion = ({
           {...register(name)}
         />
         {/* Marks */}
-        <div className="relative mt-2 w-full">
-          <div className="flex justify-between px-[10px]">
+        <div
+          style={{
+            marginTop: -12,
+          }}
+          className="relative mt-0 w-full pb-[15px]"
+        >
+          <div className="flex justify-between px-[5px]">
             {marks.map((mark) => (
               <div
                 key={mark.value}
@@ -94,6 +90,11 @@ const SingleMediaQuestion = ({
                   width: mark.label ? '120px' : '40px',
                 }}
               >
+                <div
+                  className={`mb-0.5 w-[2px] bg-gray-400 ${
+                    mark.value === 0 || mark.value === 100 ? 'h-2' : 'h-1.5'
+                  }`}
+                />
                 <span className="text-sm font-medium">{mark.value}</span>
                 {mark.label && (
                   <span className="mt-1 text-center text-xs">{mark.label}</span>
