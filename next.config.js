@@ -6,6 +6,9 @@ const nextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
+  images: {
+    unoptimized: true, // This disables the image optimization and caching
+  },
 };
 
 module.exports = nextConfig;
