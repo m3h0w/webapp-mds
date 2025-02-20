@@ -16,6 +16,7 @@ const SurveyPage = () => {
     handleSubmit,
     formState: { errors },
     trigger,
+    getValues,
   } = useForm();
 
   const onSubmit = (data: FieldValues) => {
@@ -60,6 +61,7 @@ const SurveyPage = () => {
               register={register}
               errors={errors}
               trigger={trigger}
+              getValues={getValues}
               onNext={() => {
                 setCurrentPage(1);
                 scrollToTop();
@@ -70,6 +72,7 @@ const SurveyPage = () => {
               register={register}
               errors={errors}
               trigger={trigger}
+              getValues={getValues}
               onNext={() => {
                 setCurrentPage(2);
                 scrollToTop();
@@ -80,6 +83,7 @@ const SurveyPage = () => {
               register={register}
               errors={errors}
               trigger={trigger}
+              getValues={getValues}
               onBack={() => {
                 setCurrentPage(1);
                 scrollToTop();
@@ -94,6 +98,7 @@ const SurveyPage = () => {
               register={register}
               errors={errors}
               trigger={trigger}
+              getValues={getValues}
               onBack={() => {
                 setCurrentPage(2);
                 scrollToTop();
@@ -108,6 +113,7 @@ const SurveyPage = () => {
               register={register}
               errors={errors}
               trigger={trigger}
+              getValues={getValues}
               onBack={() => {
                 setCurrentPage(3);
                 scrollToTop();

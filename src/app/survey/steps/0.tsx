@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   FieldErrors,
   FieldValues,
+  UseFormGetValues,
   UseFormRegister,
   UseFormTrigger,
 } from 'react-hook-form';
@@ -11,11 +12,40 @@ interface Page0Props {
   errors: FieldErrors<FieldValues>;
   trigger: UseFormTrigger<FieldValues>;
   onNext: () => void;
+  getValues: UseFormGetValues<FieldValues>;
 }
 
-const Page0 = ({ register, errors, trigger, onNext }: Page0Props) => {
+const Page0 = ({
+  register,
+  errors,
+  trigger,
+  onNext,
+  getValues,
+}: Page0Props) => {
+  const assetsToPreload = [
+    'https://storage.googleapis.com/dd-vr-gifs/gifs/High_strong.gif',
+    'https://storage.googleapis.com/dd-vr-gifs/gifs/High_weak.gif',
+    'https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_strong.gif',
+    'https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_weak.gif',
+    'https://storage.googleapis.com/dd-vr-gifs/gifs/Low_strong.gif',
+    'https://storage.googleapis.com/dd-vr-gifs/gifs/Low_weak.gif',
+  ];
+
+  const [loadedCount, setLoadedCount] = useState(0);
+  const totalAssets = assetsToPreload.length;
+
+  useEffect(() => {
+    assetsToPreload.forEach((asset) => {
+      const img = new Image();
+      img.onload = () => {
+        setLoadedCount((prev) => prev + 1);
+      };
+      img.src = asset;
+    });
+  }, []);
+
   const handleNext = async () => {
-    const isValid = await trigger('experimentId');
+    const isValid = await trigger('experiment_id');
     if (isValid) {
       onNext();
     }
@@ -24,24 +54,25 @@ const Page0 = ({ register, errors, trigger, onNext }: Page0Props) => {
   return (
     <div className="mx-auto max-w-2xl space-y-8">
       <div className="space-y-4 text-center">
+        {/* spacer y */}
+        <div className="h-24" />
         <h1 className="text-3xl font-bold">
           Badanie percepcji zniekształceń wizualnych
         </h1>
-        <p className="text-gray-600">
-          Witamy w badaniu dotyczącym percepcji zniekształceń wizualnych.
-          Ankieta składa się z kilku części i zajmie około 10-15 minut. Twoje
-          odpowiedzi są anonimowe i zostaną wykorzystane wyłącznie w celach
-          naukowych.
-        </p>
+        {loadedCount < totalAssets && (
+          <div className="text-gray-600">
+            Ładowanie zasobów: {loadedCount}/{totalAssets}
+          </div>
+        )}
       </div>
 
       <div className="rounded-lg border border-gray-200 bg-white p-6">
-        <label htmlFor="experimentId" className="mb-2 block font-medium">
+        <label htmlFor="experiment_id" className="mb-2 block font-medium">
           ID eksperymentu (wypełnia prowadzący):*
         </label>
         <input
           type="text"
-          {...register('experimentId', {
+          {...register('experiment_id', {
             required: 'To pole jest wymagane',
             pattern: {
               value: /^[0-9]{2}$/,
@@ -51,9 +82,9 @@ const Page0 = ({ register, errors, trigger, onNext }: Page0Props) => {
           className="w-20 rounded-md border border-gray-300 p-2"
           placeholder="01-99"
         />
-        {errors.experimentId && (
+        {errors.experiment_id && (
           <p className="mt-1 text-sm text-red-500">
-            {errors.experimentId.message as string}
+            {errors.experiment_id.message as string}
           </p>
         )}
       </div>
@@ -63,9 +94,9 @@ const Page0 = ({ register, errors, trigger, onNext }: Page0Props) => {
           type="button"
           onClick={handleNext}
           className="rounded-md bg-blue-600 px-6 py-3 text-lg font-medium text-white transition-colors hover:bg-blue-700"
-          // disabled={!isValid}
+          disabled={loadedCount < totalAssets}
         >
-          Rozpocznij ankietę
+          {loadedCount < totalAssets ? 'Ładowanie...' : 'Rozpocznij ankietę'}
         </button>
       </div>
     </div>

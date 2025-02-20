@@ -7,7 +7,7 @@ interface ComparisonQuestionProps {
   name: string;
   leftMedia: string[];
   rightMedia: string[];
-  question: string;
+  question?: string;
 }
 
 const marks = [
@@ -27,7 +27,12 @@ const ComparisonQuestion = ({
   question,
 }: ComparisonQuestionProps) => {
   return (
-    <div className="my-2 size-full space-y-0">
+    <div
+      style={{
+        marginTop: -60,
+      }}
+      className="my-0 size-full space-y-0"
+    >
       <style jsx>{`
         input[type='range'] {
           @apply w-full h-16 bg-gray-200 rounded-lg appearance-none cursor-pointer;
@@ -55,7 +60,7 @@ const ComparisonQuestion = ({
         }
       `}</style>
 
-      <h3 className="text-lg font-medium">{question}</h3>
+      {question && <h3 className="text-lg font-medium">{question}</h3>}
 
       {/* Media comparison container */}
       <div className="flex size-full justify-between gap-1">
@@ -110,6 +115,7 @@ const ComparisonQuestion = ({
           min="0"
           max="100"
           step="1"
+          defaultValue={50}
           {...register(name)}
         />
         {/* Marks */}

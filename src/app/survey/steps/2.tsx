@@ -1,6 +1,7 @@
 import {
   FieldErrors,
   FieldValues,
+  UseFormGetValues,
   UseFormRegister,
   UseFormTrigger,
 } from 'react-hook-form';
@@ -16,54 +17,81 @@ interface Page2Props {
   trigger: UseFormTrigger<FieldValues>;
   onBack: () => void;
   onNext: () => void;
+  getValues: UseFormGetValues<FieldValues>;
 }
 
 const PYTANIE =
   'Dla poniższych efektów zniekształcenia obrazu oceń na ile w Twojej ocenie przypominać mogą wizualne efekty zażycia substancji psychodelicznych takich jak LSD czy grzyby psylocybinowe?';
 
-const Page2 = ({ register, errors, trigger, onBack, onNext }: Page2Props) => {
+const Page2 = ({
+  register,
+  errors,
+  trigger,
+  onBack,
+  onNext,
+  getValues,
+}: Page2Props) => {
   const questions = useMemo(() => {
     const questionData = [
       {
-        name: 'singleVisual1',
-        media: ['/1.webp', '/2.webp', '/1.webp', '/2.webp', '/1.webp'],
+        name: 'high_strong_psychodelic',
+        media: [
+          'https://storage.googleapis.com/dd-vr-gifs/gifs/High_strong.gif',
+        ],
       },
       {
-        name: 'singleVisual2',
-        media: ['/2.webp', '/1.webp', '/2.webp', '/1.webp', '/2.webp'],
+        name: 'high_weak_psychodelic',
+        media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/High_weak.gif'],
       },
       {
-        name: 'singleVisual3',
-        media: ['/1.webp', '/2.webp', '/1.webp', '/2.webp', '/1.webp'],
+        name: 'mid_strong_psychodelic',
+        media: [
+          'https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_strong.gif',
+        ],
       },
       {
-        name: 'singleVisual4',
-        media: ['/2.webp', '/1.webp', '/2.webp', '/1.webp', '/2.webp'],
+        name: 'mid_weak_psychodelic',
+        media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_weak.gif'],
       },
       {
-        name: 'singleVisual5',
-        media: ['/1.webp', '/2.webp', '/1.webp', '/2.webp', '/1.webp'],
+        name: 'low_strong_psychodelic',
+        media: [
+          'https://storage.googleapis.com/dd-vr-gifs/gifs/Low_strong.gif',
+        ],
       },
       {
-        name: 'singleVisual6',
-        media: ['/2.webp', '/1.webp', '/2.webp', '/1.webp', '/2.webp'],
+        name: 'low_weak_psychodelic',
+        media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Low_weak.gif'],
       },
     ];
 
-    return [...questionData].sort(() => Math.random() - 0.5);
+    questionData.sort(() => Math.random() - 0.5);
+
+    return questionData;
   }, []);
 
   const handleNext = async () => {
-    const isValid = await trigger([
-      'singleVisual1',
-      'singleVisual2',
-      'singleVisual3',
-      'singleVisual4',
-      'singleVisual5',
-      'singleVisual6',
-    ]);
-    if (isValid) {
+    const fields = [
+      'high_strong_psychodelic',
+      'high_weak_psychodelic',
+      'mid_strong_psychodelic',
+      'mid_weak_psychodelic',
+      'low_strong_psychodelic',
+      'low_weak_psychodelic',
+    ];
+
+    const formValues = await trigger(fields);
+
+    // Get the current values
+    const values = fields.map((field) => getValues(field));
+
+    // Check if any values are undefined
+    const hasUndefinedValues = values.some((value) => value === undefined);
+
+    if (formValues && !hasUndefinedValues) {
       onNext();
+    } else {
+      alert('Proszę odpowiedzieć na wszystkie pytania przed przejściem dalej.');
     }
   };
 
@@ -72,7 +100,7 @@ const Page2 = ({ register, errors, trigger, onBack, onNext }: Page2Props) => {
       {/* Left side - GIFs (2/3 width) */}
       <div className="grid w-7/12 grid-cols-2 gap-4 overflow-y-auto p-2 pl-10">
         {questions.map((q, index) => (
-          <div key={q.name} className="relative aspect-video h-[30vh]">
+          <div key={q.name} className="relative aspect-video h-[30vh] w-[40vh]">
             <div className="absolute left-2 top-2 z-10 flex size-8 items-center justify-center rounded-full border border-gray-300 bg-white shadow-md">
               <span className="text-lg font-bold text-black">{index + 1}</span>
             </div>
