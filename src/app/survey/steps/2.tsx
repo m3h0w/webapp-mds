@@ -23,6 +23,35 @@ interface Page2Props {
 const PYTANIE =
   'Dla poniższych efektów zniekształcenia obrazu oceń na ile w Twojej ocenie przypominać mogą wizualne efekty zażycia substancji psychodelicznych takich jak LSD czy grzyby psylocybinowe?';
 
+const QUESTIONS = [
+  {
+    name: 'high_strong_psychodelic',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/High_strong.gif'],
+  },
+  {
+    name: 'high_weak_psychodelic',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/High_weak.gif'],
+  },
+  {
+    name: 'mid_strong_psychodelic',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_strong.gif'],
+  },
+  {
+    name: 'mid_weak_psychodelic',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_weak.gif'],
+  },
+  {
+    name: 'low_strong_psychodelic',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Low_strong.gif'],
+  },
+  {
+    name: 'low_weak_psychodelic',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Low_weak.gif'],
+  },
+];
+
+const QUESTIONS_SHUFFLED = QUESTIONS.sort(() => Math.random() - 0.5);
+
 const Page2 = ({
   register,
   errors,
@@ -37,44 +66,7 @@ const Page2 = ({
     setTouchedFields((prev) => new Set([...prev, fieldName]));
   };
 
-  const questions = useMemo(() => {
-    const questionData = [
-      {
-        name: 'high_strong_psychodelic',
-        media: [
-          'https://storage.googleapis.com/dd-vr-gifs/gifs/High_strong.gif',
-        ],
-      },
-      {
-        name: 'high_weak_psychodelic',
-        media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/High_weak.gif'],
-      },
-      {
-        name: 'mid_strong_psychodelic',
-        media: [
-          'https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_strong.gif',
-        ],
-      },
-      {
-        name: 'mid_weak_psychodelic',
-        media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_weak.gif'],
-      },
-      {
-        name: 'low_strong_psychodelic',
-        media: [
-          'https://storage.googleapis.com/dd-vr-gifs/gifs/Low_strong.gif',
-        ],
-      },
-      {
-        name: 'low_weak_psychodelic',
-        media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Low_weak.gif'],
-      },
-    ];
-
-    questionData.sort(() => Math.random() - 0.5);
-
-    return questionData;
-  }, []);
+  const questions = QUESTIONS_SHUFFLED;
 
   const handleNext = async () => {
     const fields = [
@@ -102,6 +94,10 @@ const Page2 = ({
       alert('Proszę odpowiedzieć na wszystkie pytania przed przejściem dalej.');
     }
   };
+
+  const allTouched = useMemo(() => {
+    return questions.every((q) => touchedFields.has(q.name));
+  }, [touchedFields, questions]);
 
   return (
     <div className="flex h-[98vh]">
@@ -162,6 +158,9 @@ const Page2 = ({
           <button
             type="button"
             onClick={onBack}
+            style={{
+              opacity: 0,
+            }}
             className="rounded-md bg-gray-500 px-4 py-2 text-white transition-colors hover:bg-gray-600"
           >
             Wstecz
@@ -169,7 +168,10 @@ const Page2 = ({
           <button
             type="button"
             onClick={handleNext}
-            className="rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
+            className={`rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 ${
+              !allTouched ? 'opacity-50' : ''
+            }`}
+            disabled={!allTouched}
           >
             Dalej
           </button>

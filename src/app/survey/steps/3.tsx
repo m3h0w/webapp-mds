@@ -102,6 +102,10 @@ const Page3 = ({
     }
   };
 
+  const allTouched = useMemo(() => {
+    return questions.every((q) => touchedFields.has(q.name));
+  }, [touchedFields, questions]);
+
   return (
     <div className="flex h-[98vh]">
       {/* Left side - GIFs (2/3 width) */}
@@ -162,6 +166,9 @@ const Page3 = ({
           <button
             type="button"
             onClick={onBack}
+            style={{
+              opacity: 0,
+            }}
             className="rounded-md bg-gray-500 px-4 py-2 text-white transition-colors hover:bg-gray-600"
           >
             Wstecz
@@ -169,7 +176,10 @@ const Page3 = ({
           <button
             type="button"
             onClick={handleNext}
-            className="rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
+            className={`rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 ${
+              !allTouched ? 'opacity-50' : ''
+            }`}
+            disabled={!allTouched}
           >
             Dalej
           </button>

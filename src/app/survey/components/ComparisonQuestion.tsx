@@ -67,7 +67,7 @@ const ComparisonQuestion = ({
           width: 16px;
           height: 32px;
           margin-top: -14px;
-          border: 4px solid white;
+          border: ${isTouched ? '4px solid white' : '4px solid black'};
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
           transition: all 0.4s ease;
           cursor: pointer;
@@ -89,7 +89,7 @@ const ComparisonQuestion = ({
           @apply bg-blue-600 rounded-full cursor-pointer border-0;
           width: 16px;
           height: 16px;
-          border: 2px solid white;
+          border: ${isTouched ? '4px solid white' : '4px solid black'};
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
           transition: all 0.2s ease;
         }

@@ -97,6 +97,10 @@ const Page1 = ({
     }
   };
 
+  const allTouched = useMemo(() => {
+    return questions.every((q) => touchedFields.has(q.name));
+  }, [touchedFields, questions]);
+
   return (
     <div className="grid h-screen grid-cols-1 gap-10 p-4 md:grid-cols-2">
       <h3
@@ -135,7 +139,10 @@ const Page1 = ({
         <button
           type="button"
           onClick={handleNext}
-          className="rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
+          className={`rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 ${
+            !allTouched ? 'opacity-50' : ''
+          }`}
+          disabled={!allTouched}
         >
           Dalej
         </button>
