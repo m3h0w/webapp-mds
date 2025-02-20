@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FieldValues, UseFormRegister } from 'react-hook-form';
 import Image from 'next/image';
 
@@ -8,6 +8,7 @@ interface ComparisonQuestionProps {
   leftMedia: string[];
   rightMedia: string[];
   question?: string;
+  onTouch: (name: string) => void;
 }
 
 const marks = [
@@ -25,7 +26,17 @@ const ComparisonQuestion = ({
   leftMedia,
   rightMedia,
   question,
+  onTouch,
 }: ComparisonQuestionProps) => {
+  const [isTouched, setIsTouched] = useState(false);
+
+  const handleInteraction = () => {
+    if (!isTouched) {
+      setIsTouched(true);
+      onTouch(name);
+    }
+  };
+
   return (
     <div
       style={{
@@ -35,16 +46,52 @@ const ComparisonQuestion = ({
     >
       <style jsx>{`
         input[type='range'] {
-          @apply w-full h-16 bg-gray-200 rounded-lg appearance-none cursor-pointer;
+          -webkit-appearance: none;
+          @apply w-full bg-transparent;
+          width: 100%;
+          height: 40px;
+          margin: 10px 0;
+        }
+
+        input[type='range']::-webkit-slider-runnable-track {
+          @apply w-full rounded-full;
+          height: 4px;
+          background: ${isTouched ? '#3b82f6' : '#e2e8f0'};
+          border: none;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
         }
 
         input[type='range']::-webkit-slider-thumb {
-          @apply w-20 h-20 bg-blue-600 rounded-full appearance-none cursor-pointer;
           -webkit-appearance: none;
+          @apply bg-blue-600 rounded-full cursor-pointer;
+          width: 16px;
+          height: 32px;
+          margin-top: -14px;
+          border: 4px solid white;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+          transition: all 0.4s ease;
+          cursor: pointer;
+          /* on hover, scale up */
+          &:hover {
+            transform: scale(1.1);
+          }
+        }
+
+        input[type='range']::-moz-range-track {
+          @apply w-full rounded-full;
+          height: 4px;
+          background: ${isTouched ? '#3b82f6' : '#e2e8f0'};
+          border: none;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
         }
 
         input[type='range']::-moz-range-thumb {
-          @apply w-20 h-20 bg-blue-600 rounded-full cursor-pointer border-0;
+          @apply bg-blue-600 rounded-full cursor-pointer border-0;
+          width: 16px;
+          height: 16px;
+          border: 2px solid white;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+          transition: all 0.2s ease;
         }
 
         input[type='range']:focus {
@@ -52,11 +99,23 @@ const ComparisonQuestion = ({
         }
 
         input[type='range']:focus::-webkit-slider-thumb {
-          @apply ring-2 ring-blue-300;
+          @apply ring-4 ring-blue-200;
+          transform: scale(1.1);
         }
 
         input[type='range']:focus::-moz-range-thumb {
-          @apply ring-2 ring-blue-300;
+          @apply ring-4 ring-blue-200;
+          transform: scale(1.1);
+        }
+
+        input[type='range']:hover::-webkit-slider-thumb {
+          @apply bg-blue-700;
+          transform: scale(1.1);
+        }
+
+        input[type='range']:hover::-moz-range-thumb {
+          @apply bg-blue-700;
+          transform: scale(1.1);
         }
       `}</style>
 
@@ -107,21 +166,21 @@ const ComparisonQuestion = ({
       {/* Slider container */}
       <div className="mt-8 w-full">
         <input
-          style={{
-            width: '100%',
-            height: '40px',
-          }}
           type="range"
           min="0"
           max="100"
           step="1"
           defaultValue={50}
+          onTouchStart={handleInteraction}
+          onMouseDown={handleInteraction}
           {...register(name)}
         />
         {/* Marks */}
         <div
           style={{
             marginTop: -12,
+            width: 'calc(100% - 16px)',
+            marginLeft: '8px',
           }}
           className="relative mt-0 w-full pb-[15px]"
         >

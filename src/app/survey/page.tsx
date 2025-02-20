@@ -20,23 +20,20 @@ const SurveyPage = () => {
   } = useForm();
 
   const onSubmit = (data: FieldValues) => {
-    console.log('Survey results:', data);
-
-    // Create a Blob containing the JSON data
-    const jsonString = JSON.stringify(data, null, 2);
-    const blob = new Blob([jsonString], { type: 'application/json' });
-
-    // Create a download link and trigger it
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `survey-results-${new Date().toISOString()}.json`;
-    document.body.appendChild(link);
-    link.click();
-
-    // Cleanup
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(link);
+    // console.log('Survey results:', data);
+    // // Create a Blob containing the JSON data
+    // const jsonString = JSON.stringify(data, null, 2);
+    // const blob = new Blob([jsonString], { type: 'application/json' });
+    // // Create a download link and trigger it
+    // const url = window.URL.createObjectURL(blob);
+    // const link = document.createElement('a');
+    // link.href = url;
+    // link.download = `survey-results-${new Date().toISOString()}.json`;
+    // document.body.appendChild(link);
+    // link.click();
+    // // Cleanup
+    // window.URL.revokeObjectURL(url);
+    // document.body.removeChild(link);
   };
 
   const scrollToTop = () => {

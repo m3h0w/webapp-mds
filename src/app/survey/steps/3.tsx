@@ -5,7 +5,7 @@ import {
   UseFormRegister,
   UseFormTrigger,
 } from 'react-hook-form';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Image from 'next/image';
 
 import SingleMediaQuestion from '../components/SingleMediaQuestion';
@@ -30,6 +30,12 @@ const Page3 = ({
   onNext,
   getValues,
 }: Page3Props) => {
+  const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
+
+  const handleTouch = (fieldName: string) => {
+    setTouchedFields((prev) => new Set([...prev, fieldName]));
+  };
+
   const questions = useMemo(() => {
     const questionData = [
       {
@@ -70,29 +76,26 @@ const Page3 = ({
   }, []);
 
   const handleNext = async () => {
-    const isValid = await trigger([
+    const fields = [
       'high_strong_visual_pleasure',
       'high_weak_visual_pleasure',
       'mid_strong_visual_pleasure',
       'mid_weak_visual_pleasure',
       'low_strong_visual_pleasure',
       'low_weak_visual_pleasure',
-    ]);
+    ];
+
+    const formValues = await trigger(fields);
 
     // Get the current values
-    const values = [
-      'high_strong_visual_pleasure',
-      'high_weak_visual_pleasure',
-      'mid_strong_visual_pleasure',
-      'mid_weak_visual_pleasure',
-      'low_strong_visual_pleasure',
-      'low_weak_visual_pleasure',
-    ].map((field) => getValues(field));
+    const values = fields.map((field) => getValues(field));
 
     // Check if any values are undefined
     const hasUndefinedValues = values.some((value) => value === undefined);
 
-    if (isValid && !hasUndefinedValues) {
+    const allFieldsTouched = fields.every((field) => touchedFields.has(field));
+
+    if (formValues && !hasUndefinedValues && allFieldsTouched) {
       onNext();
     } else {
       alert('Proszę odpowiedzieć na wszystkie pytania przed przejściem dalej.');
@@ -102,7 +105,7 @@ const Page3 = ({
   return (
     <div className="flex h-[98vh]">
       {/* Left side - GIFs (2/3 width) */}
-      <div className="grid w-7/12 grid-cols-2 gap-4 overflow-y-auto p-2 pl-10">
+      <div className="grid w-6/12 grid-cols-2 gap-4 overflow-y-auto p-2 pl-10">
         {questions.map((q, index) => (
           <div key={q.name} className="relative aspect-video h-[30vh] w-[40vh]">
             <div className="absolute left-2 top-2 z-10 flex size-8 items-center justify-center rounded-full border border-gray-300 bg-white shadow-md">
@@ -119,31 +122,41 @@ const Page3 = ({
       </div>
 
       {/* Right side - Sliders (1/3 width) */}
-      <div className="w-5/12 space-y-8 overflow-y-auto p-8 pr-14">
+      <div className="w-6/12 space-y-8 overflow-y-auto p-8 pr-14 pt-2">
         <h3 className="mb-6 text-lg font-medium">{PYTANIE}</h3>
 
-        {questions.map((q) => (
-          <SingleMediaQuestion
-            key={q.name}
-            register={register}
-            name={q.name}
-            media={q.media}
-            question={
-              <div className="flex items-center gap-2">
-                <div className="relative flex size-8 items-center justify-center rounded-full border border-gray-300 bg-white shadow-md">
-                  <span className="text-lg font-bold text-black">
+        <div
+          style={{
+            marginTop: 20,
+            paddingLeft: 40,
+            paddingRight: 100,
+          }}
+          className="space-y-10"
+        >
+          {questions.map((q) => (
+            <SingleMediaQuestion
+              key={q.name}
+              register={register}
+              name={q.name}
+              media={q.media}
+              onTouch={handleTouch}
+              question={
+                <div className="flex items-center gap-2">
+                  <div className="relative flex size-8 items-center justify-center rounded-full border border-gray-300 bg-white shadow-md">
+                    <span className="text-lg font-bold text-black">
+                      {questions.indexOf(q) + 1}
+                    </span>
+                  </div>
+                  <span className="text-lg font-medium">| Efekt</span>
+                  <span className="text-lg font-medium">
                     {questions.indexOf(q) + 1}
                   </span>
                 </div>
-                <span className="text-lg font-medium">| Efekt</span>
-                <span className="text-lg font-medium">
-                  {questions.indexOf(q) + 1}
-                </span>
-              </div>
-            }
-            compact={true}
-          />
-        ))}
+              }
+              compact={true}
+            />
+          ))}
+        </div>
 
         <div className="mt-8 flex justify-between pt-8">
           <button

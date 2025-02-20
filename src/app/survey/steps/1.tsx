@@ -5,7 +5,7 @@ import {
   UseFormTrigger,
   UseFormGetValues,
 } from 'react-hook-form';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import ComparisonQuestion from '../components/ComparisonQuestion';
 import { index } from 'd3';
@@ -25,6 +25,12 @@ const Page1 = ({
   onNext,
   getValues,
 }: Page1Props) => {
+  const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
+
+  const handleTouch = (fieldName: string) => {
+    setTouchedFields((prev) => new Set([...prev, fieldName]));
+  };
+
   const questions = useMemo(() => {
     const media1 = [
       'https://storage.googleapis.com/dd-vr-gifs/gifs/High_strong.gif',
@@ -73,28 +79,21 @@ const Page1 = ({
   }, []);
 
   const handleNext = async () => {
-    const formValues = await trigger([
-      'high_vs_mid',
-      'high_vs_low',
-      'mid_vs_low',
-    ]);
+    const requiredFields = ['high_vs_mid', 'high_vs_low', 'mid_vs_low'];
 
-    // Get the current values using getValues as an object
-    const currentValues = {
-      high_vs_mid: getValues('high_vs_mid'),
-      high_vs_low: getValues('high_vs_low'),
-      mid_vs_low: getValues('mid_vs_low'),
-    };
-
-    // Check if any values are undefined
-    const hasUndefinedValues = Object.values(currentValues).some(
-      (value) => value === -1
+    // Check if all fields have been touched
+    const allFieldsTouched = requiredFields.every((field) =>
+      touchedFields.has(field)
     );
 
-    if (formValues && !hasUndefinedValues) {
-      onNext();
-    } else {
+    if (!allFieldsTouched) {
       alert('Proszę odpowiedzieć na wszystkie pytania przed przejściem dalej.');
+      return;
+    }
+
+    const formValues = await trigger(requiredFields);
+    if (formValues) {
+      onNext();
     }
   };
 
@@ -127,6 +126,7 @@ const Page1 = ({
             name={q.name}
             leftMedia={q.leftMedia}
             rightMedia={q.rightMedia}
+            onTouch={handleTouch}
           />
         </div>
       ))}

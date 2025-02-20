@@ -78,9 +78,19 @@ const Page4 = ({
         <p className="text-2xl font-bold">Serdecznie dziękujemy za udział!</p>
         <button
           onClick={downloadResults}
-          className="rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
+          className="rounded-md bg-gray-600 px-4 py-2 text-white transition-colors hover:bg-gray-700"
         >
           Pobierz wyniki jeszcze raz
+        </button>
+        {/* restart survey */}
+        <button
+          className="rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
+          onClick={() => {
+            // refresh the page
+            window.location.reload();
+          }}
+        >
+          Restartuj ankietę
         </button>
       </div>
     );

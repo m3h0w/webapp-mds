@@ -5,7 +5,7 @@ import {
   UseFormRegister,
   UseFormTrigger,
 } from 'react-hook-form';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Image from 'next/image';
 
 import SingleMediaQuestion from '../components/SingleMediaQuestion';
@@ -31,6 +31,12 @@ const Page2 = ({
   onNext,
   getValues,
 }: Page2Props) => {
+  const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
+
+  const handleTouch = (fieldName: string) => {
+    setTouchedFields((prev) => new Set([...prev, fieldName]));
+  };
+
   const questions = useMemo(() => {
     const questionData = [
       {
@@ -85,10 +91,12 @@ const Page2 = ({
     // Get the current values
     const values = fields.map((field) => getValues(field));
 
+    const allFieldsTouched = fields.every((field) => touchedFields.has(field));
+
     // Check if any values are undefined
     const hasUndefinedValues = values.some((value) => value === undefined);
 
-    if (formValues && !hasUndefinedValues) {
+    if (formValues && !hasUndefinedValues && allFieldsTouched) {
       onNext();
     } else {
       alert('Proszę odpowiedzieć na wszystkie pytania przed przejściem dalej.');
@@ -98,7 +106,7 @@ const Page2 = ({
   return (
     <div className="flex h-[98vh]">
       {/* Left side - GIFs (2/3 width) */}
-      <div className="grid w-7/12 grid-cols-2 gap-4 overflow-y-auto p-2 pl-10">
+      <div className="grid w-6/12 grid-cols-2 gap-4 overflow-y-auto p-2 pl-10">
         {questions.map((q, index) => (
           <div key={q.name} className="relative aspect-video h-[30vh] w-[40vh]">
             <div className="absolute left-2 top-2 z-10 flex size-8 items-center justify-center rounded-full border border-gray-300 bg-white shadow-md">
@@ -115,11 +123,13 @@ const Page2 = ({
       </div>
 
       {/* Right side - Sliders (1/3 width) */}
-      <div className="w-5/12 space-y-10 overflow-y-auto p-8 pr-14">
+      <div className=" w-6/12 space-y-10 overflow-y-auto p-8 pr-14 pt-2">
         <h3 className="text-lg font-medium">{PYTANIE}</h3>
         <div
           style={{
             marginTop: 20,
+            paddingLeft: 40,
+            paddingRight: 100,
           }}
           className="space-y-10"
         >
@@ -129,6 +139,7 @@ const Page2 = ({
               register={register}
               name={q.name}
               media={q.media}
+              onTouch={handleTouch}
               question={
                 <div className="flex items-center gap-2">
                   <div className="relative flex size-8 items-center justify-center rounded-full border border-gray-300 bg-white shadow-md">
