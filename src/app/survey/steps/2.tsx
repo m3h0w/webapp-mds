@@ -70,28 +70,6 @@ const QUESTIONS = [
   },
 ];
 
-// Randomize while maintaining strong/weak grouping
-const _QUESTIONS_SHUFFLED = (() => {
-  const levels = ['high', 'mid', 'low'].sort(() => Math.random() - 0.5);
-  return [
-    // Strong group (first 3)
-    ...levels.map(
-      (level, idx) =>
-        QUESTIONS.find((q) => q.group === 'strong' && q.level === level)!
-    ),
-    // Weak group (last 3)
-    ...levels.map(
-      (level, idx) =>
-        QUESTIONS.find((q) => q.group === 'weak' && q.level === level)!
-    ),
-  ];
-})();
-
-const QUESTIONS_SHUFFLED = _QUESTIONS_SHUFFLED.map((q, index) => ({
-  ...q,
-  number: index < 3 ? index * 2 + 1 : (index - 3) * 2 + 2,
-}));
-
 const getOrderedIndex = (index: number) => {
   // Convert grid position to ordered number (1-6)
   const orderMap = [0, 3, 1, 4, 2, 5]; // Maps grid position to desired order
@@ -114,7 +92,28 @@ const Page2 = ({
     setTouchedFields((prev) => new Set([...prev, fieldName]));
   };
 
-  const questions = QUESTIONS_SHUFFLED;
+  const questions = useMemo(() => {
+    const levels = ['high', 'mid', 'low'].sort(() => Math.random() - 0.5);
+    const groups = ['strong', 'weak'].sort(() => Math.random() - 0.5);
+
+    const shuffledQuestions = [
+      // First group (first 3)
+      ...levels.map(
+        (level) =>
+          QUESTIONS.find((q) => q.group === groups[0] && q.level === level)!
+      ),
+      // Second group (last 3)
+      ...levels.map(
+        (level) =>
+          QUESTIONS.find((q) => q.group === groups[1] && q.level === level)!
+      ),
+    ];
+
+    return shuffledQuestions.map((q, index) => ({
+      ...q,
+      number: index < 3 ? index * 2 + 1 : (index - 3) * 2 + 2,
+    }));
+  }, []);
 
   const handleNext = async () => {
     const fields = [
@@ -228,7 +227,7 @@ const Page2 = ({
             ))}
         </div>
 
-        <div className="mt-14 flex justify-between pt-4">
+        <div className="fixed bottom-10 right-10 mt-14 flex justify-between pt-4">
           <button
             type="button"
             onClick={onBack}
