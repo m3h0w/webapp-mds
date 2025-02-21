@@ -68,7 +68,7 @@ const Page0 = ({
 
       <div className="rounded-lg border border-gray-200 bg-white p-6">
         <label htmlFor="experiment_id" className="mb-2 block font-medium">
-          ID eksperymentu (wypełnia prowadzący):*
+          ID eksperymentu (wypełnia prowadzący):
         </label>
         <input
           type="text"

@@ -24,40 +24,73 @@ const PYTANIE =
   'Dla poniższych efektów zniekształcenia obrazu oceń na ile w Twojej ocenie przypominać mogą wizualne efekty zażycia substancji psychodelicznych takich jak LSD czy grzyby psylocybinowe?';
 
 const QUESTIONS = [
+  // Strong group (top)
   {
     name: 'high_strong_psychodelic',
     media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/High_strong.gif'],
-    number: 1,
+    // number: 1,
+    group: 'strong',
+    level: 'high',
   },
   {
     name: 'mid_strong_psychodelic',
     media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_strong.gif'],
-    number: 3,
+    // number: 2,
+    group: 'strong',
+    level: 'mid',
   },
   {
     name: 'low_strong_psychodelic',
     media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Low_strong.gif'],
-    number: 5,
+    // number: 3,
+    group: 'strong',
+    level: 'low',
   },
+  // Weak group (bottom)
   {
     name: 'high_weak_psychodelic',
     media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/High_weak.gif'],
-    number: 2,
+    // number: 4,
+    group: 'weak',
+    level: 'high',
   },
   {
     name: 'mid_weak_psychodelic',
     media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_weak.gif'],
-    number: 4,
+    // number: 5,
+    group: 'weak',
+    level: 'mid',
   },
   {
     name: 'low_weak_psychodelic',
     media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Low_weak.gif'],
-    number: 6,
+    // number: 6,
+    group: 'weak',
+    level: 'low',
   },
 ];
 
-// const QUESTIONS_SHUFFLED = QUESTIONS.sort(() => Math.random() - 0.5);
-const QUESTIONS_SHUFFLED = QUESTIONS;
+// Randomize while maintaining strong/weak grouping
+const _QUESTIONS_SHUFFLED = (() => {
+  const levels = ['high', 'mid', 'low'].sort(() => Math.random() - 0.5);
+  return [
+    // Strong group (first 3)
+    ...levels.map(
+      (level, idx) =>
+        QUESTIONS.find((q) => q.group === 'strong' && q.level === level)!
+    ),
+    // Weak group (last 3)
+    ...levels.map(
+      (level, idx) =>
+        QUESTIONS.find((q) => q.group === 'weak' && q.level === level)!
+    ),
+  ];
+})();
+
+const QUESTIONS_SHUFFLED = _QUESTIONS_SHUFFLED.map((q, index) => ({
+  ...q,
+  number: index < 3 ? index * 2 + 1 : (index - 3) * 2 + 2,
+}));
 
 const getOrderedIndex = (index: number) => {
   // Convert grid position to ordered number (1-6)
@@ -136,7 +169,7 @@ const Page2 = ({
         <div className="grid grid-cols-3 gap-4 overflow-y-auto p-2 pl-10">
           {questions.map((q, index) => (
             <div
-              key={q.name + index + refreshKey}
+              key={'2' + q.name + index + refreshKey}
               className="relative aspect-video h-[45vh] w-[33vh]"
             >
               <div className="absolute left-2 top-2 z-10 flex size-8 items-center justify-center rounded-full border border-gray-300 bg-white shadow-md">
@@ -151,7 +184,7 @@ const Page2 = ({
                   priority={index < 3}
                   loading={index < 3 ? 'eager' : 'lazy'}
                   unoptimized={true}
-                  key={q.name + index + refreshKey + 'image'}
+                  key={'2' + q.name + index + refreshKey + 'image'}
                 />
               )}
             </div>
