@@ -215,7 +215,7 @@ const Page3 = ({
             ))}
         </div>
 
-        <div className="mt-8 flex justify-between pt-8">
+        <div className="fixed bottom-10 right-10 mt-8 flex justify-between pt-8">
           <button
             type="button"
             onClick={onBack}
