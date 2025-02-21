@@ -138,6 +138,8 @@ const ComparisonQuestion = ({
                 alt={`Left comparison ${index + 1}`}
                 fill
                 className="rounded-lg object-cover"
+                loading={'lazy'}
+                unoptimized={true}
               />
             </div>
           ))}

@@ -45,17 +45,17 @@ const Page4 = ({
     URL.revokeObjectURL(jsonUrl);
 
     // Download as CSV
-    const csvRows = Object.entries(results_with_date).map(
-      ([key, value]) => `${key},${value}`
-    );
-    const csvContent = ['field,value', ...csvRows].join('\n');
-    const csvBlob = new Blob([csvContent], { type: 'text/csv' });
-    const csvUrl = URL.createObjectURL(csvBlob);
-    const csvLink = document.createElement('a');
-    csvLink.href = csvUrl;
-    csvLink.download = `survey_results_${experiment_id}.csv`;
-    csvLink.click();
-    URL.revokeObjectURL(csvUrl);
+    // const csvRows = Object.entries(results_with_date).map(
+    //   ([key, value]) => `${key},${value}`
+    // );
+    // const csvContent = ['field,value', ...csvRows].join('\n');
+    // const csvBlob = new Blob([csvContent], { type: 'text/csv' });
+    // const csvUrl = URL.createObjectURL(csvBlob);
+    // const csvLink = document.createElement('a');
+    // csvLink.href = csvUrl;
+    // csvLink.download = `survey_results_${experiment_id}.csv`;
+    // csvLink.click();
+    // URL.revokeObjectURL(csvUrl);
   };
 
   const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -114,23 +114,23 @@ const Page4 = ({
           </label>
           <div className="space-y-2">
             {[
-              'Nigdy',
-              '1 raz',
-              '2-4 razy',
-              '4-10 razy',
-              'więcej niż 10 razy',
-              'Wolę nie odpowiadać',
+              { display: 'Nigdy', value: 'never' },
+              { display: '1 raz', value: 'once' },
+              { display: '2-4 razy', value: '2-4_times' },
+              { display: '4-10 razy', value: '4-10_times' },
+              { display: 'więcej niż 10 razy', value: 'more_than_10' },
+              { display: 'Wolę nie odpowiadać', value: 'prefer_not_to_say' },
             ].map((option) => (
-              <label key={option} className="flex items-center">
+              <label key={option.display} className="flex items-center">
                 <input
                   type="radio"
                   {...register('psychedelic_use', {
                     required: 'To pole jest wymagane',
                   })}
-                  value={option}
+                  value={option.value}
                   className="mr-2"
                 />
-                {option}
+                {option.display}
               </label>
             ))}
           </div>
@@ -148,23 +148,23 @@ const Page4 = ({
           </label>
           <div className="space-y-2">
             {[
-              'Nigdy',
-              'Raz',
-              'Kilka razy',
-              'Wiele razy',
-              'Regularnie używam',
-              'Wolę nie odpowiadać',
+              { display: 'Nigdy', value: 'never' },
+              { display: 'Raz', value: 'once' },
+              { display: 'Kilka razy', value: 'few_times' },
+              { display: 'Wiele razy', value: 'many_times' },
+              { display: 'Regularnie używam', value: 'regular_use' },
+              { display: 'Wolę nie odpowiadać', value: 'prefer_not_to_say' },
             ].map((option) => (
-              <label key={option} className="flex items-center">
+              <label key={option.display} className="flex items-center">
                 <input
                   type="radio"
                   {...register('vr_use', {
                     required: 'To pole jest wymagane',
                   })}
-                  value={option}
+                  value={option.value}
                   className="mr-2"
                 />
-                {option}
+                {option.display}
               </label>
             ))}
           </div>
@@ -181,17 +181,20 @@ const Page4 = ({
             dominację oczną.
           </label>
           <div className="flex gap-4">
-            {['Lewe oko', 'Prawe oko'].map((option) => (
-              <label key={option} className="flex items-center">
+            {[
+              { display: 'Lewe oko', value: 'left_eye' },
+              { display: 'Prawe oko', value: 'right_eye' },
+            ].map((option) => (
+              <label key={option.display} className="flex items-center">
                 <input
                   type="radio"
                   {...register('eye_dominance', {
                     required: 'To pole jest wymagane',
                   })}
-                  value={option}
+                  value={option.value}
                   className="mr-2"
                 />
-                {option}
+                {option.display}
               </label>
             ))}
           </div>

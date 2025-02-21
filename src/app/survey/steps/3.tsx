@@ -22,6 +22,41 @@ interface Page3Props {
 const PYTANIE =
   'Dla poniższych efektów zniekształcenia obrazu oceń na ile podobały Ci się one wizualnie, tak że miałaś/miałeś przyjemność z ich oglądania? ';
 
+const QUESTIONS = [
+  {
+    name: 'high_strong_visual_pleasure',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/High_strong.gif'],
+    number: 1,
+  },
+  {
+    name: 'mid_strong_visual_pleasure',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_strong.gif'],
+    number: 3,
+  },
+  {
+    name: 'low_strong_visual_pleasure',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Low_strong.gif'],
+    number: 5,
+  },
+  {
+    name: 'high_weak_visual_pleasure',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/High_weak.gif'],
+    number: 2,
+  },
+  {
+    name: 'mid_weak_visual_pleasure',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_weak.gif'],
+    number: 4,
+  },
+  {
+    name: 'low_weak_visual_pleasure',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Low_weak.gif'],
+    number: 6,
+  },
+];
+
+const QUESTIONS_SHUFFLED = QUESTIONS;
+
 const Page3 = ({
   register,
   errors,
@@ -31,49 +66,22 @@ const Page3 = ({
   getValues,
 }: Page3Props) => {
   const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [imagesVisible, setImagesVisible] = useState(true);
 
   const handleTouch = (fieldName: string) => {
     setTouchedFields((prev) => new Set([...prev, fieldName]));
   };
 
-  const questions = useMemo(() => {
-    const questionData = [
-      {
-        name: 'high_strong_visual_pleasure',
-        media: [
-          'https://storage.googleapis.com/dd-vr-gifs/gifs/High_strong.gif',
-        ],
-      },
-      {
-        name: 'high_weak_visual_pleasure',
-        media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/High_weak.gif'],
-      },
-      {
-        name: 'mid_strong_visual_pleasure',
-        media: [
-          'https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_strong.gif',
-        ],
-      },
-      {
-        name: 'mid_weak_visual_pleasure',
-        media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_weak.gif'],
-      },
-      {
-        name: 'low_strong_visual_pleasure',
-        media: [
-          'https://storage.googleapis.com/dd-vr-gifs/gifs/Low_strong.gif',
-        ],
-      },
-      {
-        name: 'low_weak_visual_pleasure',
-        media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Low_weak.gif'],
-      },
-    ];
+  const handleRefresh = () => {
+    setImagesVisible(false);
+    setTimeout(() => {
+      setRefreshKey((prev) => prev + 1);
+      setImagesVisible(true);
+    }, 1000);
+  };
 
-    questionData.sort(() => Math.random() - 0.5);
-
-    return questionData;
-  }, []);
+  const questions = QUESTIONS_SHUFFLED;
 
   const handleNext = async () => {
     const fields = [
@@ -107,26 +115,44 @@ const Page3 = ({
   }, [touchedFields, questions]);
 
   return (
-    <div className="flex h-[98vh]">
+    <div className="flex h-[98vh]" key={refreshKey}>
       {/* Left side - GIFs (2/3 width) */}
-      <div className="grid w-6/12 grid-cols-2 gap-4 overflow-y-auto p-2 pl-10">
-        {questions.map((q, index) => (
-          <div key={q.name} className="relative aspect-video h-[30vh] w-[40vh]">
-            <div className="absolute left-2 top-2 z-10 flex size-8 items-center justify-center rounded-full border border-gray-300 bg-white shadow-md">
-              <span className="text-lg font-bold text-black">{index + 1}</span>
+      <div className="relative w-7/12">
+        <button
+          type="button"
+          onClick={handleRefresh}
+          className="absolute bottom-4 left-20 z-10 rounded-md bg-gray-500 px-3 py-1 text-white transition-colors hover:bg-gray-600"
+        >
+          Odśwież
+        </button>
+        <div className="grid grid-cols-3 gap-4 overflow-y-auto p-2 pl-10">
+          {questions.map((q, index) => (
+            <div
+              key={'3' + q.name + index + refreshKey}
+              className="relative aspect-video h-[45vh] w-[33vh]"
+            >
+              <div className="absolute left-2 top-2 z-10 flex size-8 items-center justify-center rounded-full border border-gray-300 bg-white shadow-md">
+                <span className="text-lg font-bold text-black">{q.number}</span>
+              </div>
+              {imagesVisible && (
+                <Image
+                  src={q.media[0]}
+                  alt={q.name}
+                  fill
+                  className="rounded-lg object-cover"
+                  priority={index < 3}
+                  loading={index < 3 ? 'eager' : 'lazy'}
+                  unoptimized={true}
+                  key={'3' + q.name + index + refreshKey + 'image'}
+                />
+              )}
             </div>
-            <Image
-              src={q.media[0]}
-              alt={q.name}
-              fill
-              className="rounded-lg object-cover"
-            />
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* Right side - Sliders (1/3 width) */}
-      <div className="w-6/12 space-y-8 overflow-y-auto p-8 pr-14 pt-2">
+      <div className="w-5/12 space-y-8 overflow-y-auto p-8 pr-14 pt-2">
         <h3 className="mb-6 text-lg font-medium">{PYTANIE}</h3>
 
         <div
@@ -137,29 +163,29 @@ const Page3 = ({
           }}
           className="space-y-10"
         >
-          {questions.map((q) => (
-            <SingleMediaQuestion
-              key={q.name}
-              register={register}
-              name={q.name}
-              media={q.media}
-              onTouch={handleTouch}
-              question={
-                <div className="flex items-center gap-2">
-                  <div className="relative flex size-8 items-center justify-center rounded-full border border-gray-300 bg-white shadow-md">
-                    <span className="text-lg font-bold text-black">
-                      {questions.indexOf(q) + 1}
-                    </span>
+          {[...questions]
+            .sort((a, b) => a.number - b.number)
+            .map((q) => (
+              <SingleMediaQuestion
+                key={q.name}
+                register={register}
+                name={q.name}
+                media={q.media}
+                onTouch={handleTouch}
+                question={
+                  <div className="flex items-center gap-2">
+                    <div className="relative flex size-8 items-center justify-center rounded-full border border-gray-300 bg-white shadow-md">
+                      <span className="text-lg font-bold text-black">
+                        {q.number}
+                      </span>
+                    </div>
+                    <span className="text-lg font-medium">| Efekt</span>
+                    <span className="text-lg font-medium">{q.number}</span>
                   </div>
-                  <span className="text-lg font-medium">| Efekt</span>
-                  <span className="text-lg font-medium">
-                    {questions.indexOf(q) + 1}
-                  </span>
-                </div>
-              }
-              compact={true}
-            />
-          ))}
+                }
+                compact={true}
+              />
+            ))}
         </div>
 
         <div className="mt-8 flex justify-between pt-8">

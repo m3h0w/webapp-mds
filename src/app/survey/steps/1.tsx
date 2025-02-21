@@ -102,7 +102,7 @@ const Page1 = ({
   }, [touchedFields, questions]);
 
   return (
-    <div className="grid h-screen grid-cols-1 gap-10 p-4 md:grid-cols-2">
+    <div className="grid h-[125vh] grid-cols-1 gap-10 p-4 md:grid-cols-2">
       <h3
         style={{
           height: 2,
@@ -116,7 +116,7 @@ const Page1 = ({
       {questions.map((q, index) => (
         <div
           key={q.name}
-          className={`mx-auto h-[calc(35vh)] ${
+          className={`mx-auto h-[calc(45vh)] ${
             index === 2 ? 'md:col-start-1 md:col-end-2' : ''
           }`}
           style={{
@@ -135,7 +135,7 @@ const Page1 = ({
         </div>
       ))}
 
-      <div className="absolute bottom-10 right-10">
+      <div className="fixed bottom-10 right-10">
         <button
           type="button"
           onClick={handleNext}
