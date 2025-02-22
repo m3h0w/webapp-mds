@@ -35,27 +35,27 @@ const Page4 = ({
     const experiment_id = results.experiment_id;
 
     // Download as JSON
-    const jsonData = JSON.stringify(results_with_date, null, 2);
-    const jsonBlob = new Blob([jsonData], { type: 'application/json' });
-    const jsonUrl = URL.createObjectURL(jsonBlob);
-    const jsonLink = document.createElement('a');
-    jsonLink.href = jsonUrl;
-    jsonLink.download = `survey_results_${experiment_id}.json`;
-    jsonLink.click();
-    URL.revokeObjectURL(jsonUrl);
+    // const jsonData = JSON.stringify(results_with_date, null, 2);
+    // const jsonBlob = new Blob([jsonData], { type: 'application/json' });
+    // const jsonUrl = URL.createObjectURL(jsonBlob);
+    // const jsonLink = document.createElement('a');
+    // jsonLink.href = jsonUrl;
+    // jsonLink.download = `survey_results_${experiment_id}.json`;
+    // jsonLink.click();
+    // URL.revokeObjectURL(jsonUrl);
 
     // Download as CSV
-    // const csvRows = Object.entries(results_with_date).map(
-    //   ([key, value]) => `${key},${value}`
-    // );
-    // const csvContent = ['field,value', ...csvRows].join('\n');
-    // const csvBlob = new Blob([csvContent], { type: 'text/csv' });
-    // const csvUrl = URL.createObjectURL(csvBlob);
-    // const csvLink = document.createElement('a');
-    // csvLink.href = csvUrl;
-    // csvLink.download = `survey_results_${experiment_id}.csv`;
-    // csvLink.click();
-    // URL.revokeObjectURL(csvUrl);
+    const csvRows = Object.entries(results_with_date).map(
+      ([key, value]) => `${key},${value}`
+    );
+    const csvContent = ['field,value', ...csvRows].join('\n');
+    const csvBlob = new Blob([csvContent], { type: 'text/csv' });
+    const csvUrl = URL.createObjectURL(csvBlob);
+    const csvLink = document.createElement('a');
+    csvLink.href = csvUrl;
+    csvLink.download = `survey_results_${experiment_id}.csv`;
+    csvLink.click();
+    URL.revokeObjectURL(csvUrl);
   };
 
   const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -235,7 +235,7 @@ const Page4 = ({
         <button
           type="button"
           onClick={onBack}
-          className="rounded-md bg-gray-500 px-4 py-2 text-white transition-colors hover:bg-gray-600"
+          className="rounded-md bg-gray-500 px-4 py-2 text-white opacity-0 transition-colors hover:bg-gray-600"
         >
           Wstecz
         </button>

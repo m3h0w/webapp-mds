@@ -5,11 +5,10 @@ import {
   UseFormRegister,
   UseFormTrigger,
 } from 'react-hook-form';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 
 import SingleMediaQuestion from '../components/SingleMediaQuestion';
-import { index } from 'd3';
 
 interface Page2Props {
   register: UseFormRegister<FieldValues>;
@@ -18,63 +17,17 @@ interface Page2Props {
   onBack: () => void;
   onNext: () => void;
   getValues: UseFormGetValues<FieldValues>;
+  questions: Array<{
+    name: string;
+    media: string[];
+    group: string;
+    level: string;
+    number: number;
+  }>;
 }
 
 const PYTANIE =
   'Dla poniższych efektów zniekształcenia obrazu oceń na ile w Twojej ocenie przypominać mogą wizualne efekty zażycia substancji psychodelicznych takich jak LSD czy grzyby psylocybinowe?';
-
-const QUESTIONS = [
-  // Strong group (top)
-  {
-    name: 'high_strong_psychodelic',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/High_strong.gif'],
-    // number: 1,
-    group: 'strong',
-    level: 'high',
-  },
-  {
-    name: 'mid_strong_psychodelic',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_strong.gif'],
-    // number: 2,
-    group: 'strong',
-    level: 'mid',
-  },
-  {
-    name: 'low_strong_psychodelic',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Low_strong.gif'],
-    // number: 3,
-    group: 'strong',
-    level: 'low',
-  },
-  // Weak group (bottom)
-  {
-    name: 'high_weak_psychodelic',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/High_weak.gif'],
-    // number: 4,
-    group: 'weak',
-    level: 'high',
-  },
-  {
-    name: 'mid_weak_psychodelic',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_weak.gif'],
-    // number: 5,
-    group: 'weak',
-    level: 'mid',
-  },
-  {
-    name: 'low_weak_psychodelic',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Low_weak.gif'],
-    // number: 6,
-    group: 'weak',
-    level: 'low',
-  },
-];
-
-const getOrderedIndex = (index: number) => {
-  // Convert grid position to ordered number (1-6)
-  const orderMap = [0, 3, 1, 4, 2, 5]; // Maps grid position to desired order
-  return orderMap.indexOf(index) + 1;
-};
 
 const Page2 = ({
   register,
@@ -83,6 +36,7 @@ const Page2 = ({
   onBack,
   onNext,
   getValues,
+  questions,
 }: Page2Props) => {
   const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
   const [refreshKey, setRefreshKey] = useState(0);
@@ -91,29 +45,6 @@ const Page2 = ({
   const handleTouch = (fieldName: string) => {
     setTouchedFields((prev) => new Set([...prev, fieldName]));
   };
-
-  const questions = useMemo(() => {
-    const levels = ['high', 'mid', 'low'].sort(() => Math.random() - 0.5);
-    const groups = ['strong', 'weak'].sort(() => Math.random() - 0.5);
-
-    const shuffledQuestions = [
-      // First group (first 3)
-      ...levels.map(
-        (level) =>
-          QUESTIONS.find((q) => q.group === groups[0] && q.level === level)!
-      ),
-      // Second group (last 3)
-      ...levels.map(
-        (level) =>
-          QUESTIONS.find((q) => q.group === groups[1] && q.level === level)!
-      ),
-    ];
-
-    return shuffledQuestions.map((q, index) => ({
-      ...q,
-      number: index < 3 ? index * 2 + 1 : (index - 3) * 2 + 2,
-    }));
-  }, []);
 
   const handleNext = async () => {
     const fields = [
@@ -142,9 +73,7 @@ const Page2 = ({
     }
   };
 
-  const allTouched = useMemo(() => {
-    return questions.every((q) => touchedFields.has(q.name));
-  }, [touchedFields, questions]);
+  const allTouched = questions.every((q) => touchedFields.has(q.name));
 
   const handleRefresh = () => {
     setImagesVisible(false);

@@ -17,51 +17,17 @@ interface Page3Props {
   onBack: () => void;
   onNext: () => void;
   getValues: UseFormGetValues<FieldValues>;
+  questions: Array<{
+    name: string;
+    media: string[];
+    group: string;
+    level: string;
+    number: number;
+  }>;
 }
 
 const PYTANIE =
   'Dla poniższych efektów zniekształcenia obrazu oceń na ile podobały Ci się one wizualnie, tak że miałaś/miałeś przyjemność z ich oglądania? ';
-
-const QUESTIONS = [
-  // Strong group (top)
-  {
-    name: 'high_strong_visual_pleasure',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/High_strong.gif'],
-    group: 'strong',
-    level: 'high',
-  },
-  {
-    name: 'mid_strong_visual_pleasure',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_strong.gif'],
-    group: 'strong',
-    level: 'mid',
-  },
-  {
-    name: 'low_strong_visual_pleasure',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Low_strong.gif'],
-    group: 'strong',
-    level: 'low',
-  },
-  // Weak group (bottom)
-  {
-    name: 'high_weak_visual_pleasure',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/High_weak.gif'],
-    group: 'weak',
-    level: 'high',
-  },
-  {
-    name: 'mid_weak_visual_pleasure',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_weak.gif'],
-    group: 'weak',
-    level: 'mid',
-  },
-  {
-    name: 'low_weak_visual_pleasure',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Low_weak.gif'],
-    group: 'weak',
-    level: 'low',
-  },
-];
 
 const Page3 = ({
   register,
@@ -70,6 +36,7 @@ const Page3 = ({
   onBack,
   onNext,
   getValues,
+  questions,
 }: Page3Props) => {
   const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
   const [refreshKey, setRefreshKey] = useState(0);
@@ -87,39 +54,8 @@ const Page3 = ({
     }, 1000);
   };
 
-  const questions = useMemo(() => {
-    const levels = ['high', 'mid', 'low'].sort(() => Math.random() - 0.5);
-    const groups = ['strong', 'weak'].sort(() => Math.random() - 0.5);
-
-    const shuffledQuestions = [
-      // First group (first 3)
-      ...levels.map(
-        (level) =>
-          QUESTIONS.find((q) => q.group === groups[0] && q.level === level)!
-      ),
-      // Second group (last 3)
-      ...levels.map(
-        (level) =>
-          QUESTIONS.find((q) => q.group === groups[1] && q.level === level)!
-      ),
-    ];
-
-    return shuffledQuestions.map((q, index) => ({
-      ...q,
-      number: index < 3 ? index * 2 + 1 : (index - 3) * 2 + 2,
-    }));
-  }, []);
-
   const handleNext = async () => {
-    const fields = [
-      'high_strong_visual_pleasure',
-      'high_weak_visual_pleasure',
-      'mid_strong_visual_pleasure',
-      'mid_weak_visual_pleasure',
-      'low_strong_visual_pleasure',
-      'low_weak_visual_pleasure',
-    ];
-
+    const fields = questions.map((q) => q.name);
     const formValues = await trigger(fields);
 
     // Get the current values

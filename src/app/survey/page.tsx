@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 
 import Page1 from './steps/1';
@@ -8,6 +8,94 @@ import Page2 from './steps/2';
 import Page3 from './steps/3';
 import Page4 from './steps/4';
 import Page0 from '@/app/survey/steps/0';
+
+const QUESTIONS_2 = [
+  // Strong group (top)
+  {
+    name: 'high_strong_psychodelic',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/High_strong.gif'],
+    // number: 1,
+    group: 'strong',
+    level: 'high',
+  },
+  {
+    name: 'mid_strong_psychodelic',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_strong.gif'],
+    // number: 2,
+    group: 'strong',
+    level: 'mid',
+  },
+  {
+    name: 'low_strong_psychodelic',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Low_strong.gif'],
+    // number: 3,
+    group: 'strong',
+    level: 'low',
+  },
+  // Weak group (bottom)
+  {
+    name: 'high_weak_psychodelic',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/High_weak.gif'],
+    // number: 4,
+    group: 'weak',
+    level: 'high',
+  },
+  {
+    name: 'mid_weak_psychodelic',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_weak.gif'],
+    // number: 5,
+    group: 'weak',
+    level: 'mid',
+  },
+  {
+    name: 'low_weak_psychodelic',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Low_weak.gif'],
+    // number: 6,
+    group: 'weak',
+    level: 'low',
+  },
+];
+
+const QUESTIONS_3 = [
+  // Strong group (top)
+  {
+    name: 'high_strong_visual_pleasure',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/High_strong.gif'],
+    group: 'strong',
+    level: 'high',
+  },
+  {
+    name: 'mid_strong_visual_pleasure',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_strong.gif'],
+    group: 'strong',
+    level: 'mid',
+  },
+  {
+    name: 'low_strong_visual_pleasure',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Low_strong.gif'],
+    group: 'strong',
+    level: 'low',
+  },
+  // Weak group (bottom)
+  {
+    name: 'high_weak_visual_pleasure',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/High_weak.gif'],
+    group: 'weak',
+    level: 'high',
+  },
+  {
+    name: 'mid_weak_visual_pleasure',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_weak.gif'],
+    group: 'weak',
+    level: 'mid',
+  },
+  {
+    name: 'low_weak_visual_pleasure',
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Low_weak.gif'],
+    group: 'weak',
+    level: 'low',
+  },
+];
 
 const SurveyPage = () => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -18,6 +106,49 @@ const SurveyPage = () => {
     trigger,
     getValues,
   } = useForm();
+
+  // Create shared randomization
+  const { randomizedQuestions2, randomizedQuestions3 } = useMemo(() => {
+    const levels = ['high', 'mid', 'low'].sort(() => Math.random() - 0.5);
+    const groups = ['strong', 'weak'].sort(() => Math.random() - 0.5);
+
+    const createNumberedQuestions = (questions: typeof QUESTIONS_2) => {
+      const shuffledQuestions = [
+        // First group (first 3)
+        ...levels.map(
+          (level) =>
+            questions.find((q) => q.group === groups[0] && q.level === level)!
+        ),
+        // Second group (last 3)
+        ...levels.map(
+          (level) =>
+            questions.find((q) => q.group === groups[1] && q.level === level)!
+        ),
+      ];
+
+      // replace urls with local urls if localhost
+      if (process.env.NODE_ENV === 'development') {
+        shuffledQuestions.forEach((q) => {
+          q.media = q.media.map((m) =>
+            m.replace(
+              'https://storage.googleapis.com/dd-vr-gifs/gifs/',
+              'http://localhost:3000/dd/'
+            )
+          );
+        });
+      }
+
+      return shuffledQuestions.map((q, index) => ({
+        ...q,
+        number: index < 3 ? index * 2 + 1 : (index - 3) * 2 + 2,
+      }));
+    };
+
+    return {
+      randomizedQuestions2: createNumberedQuestions(QUESTIONS_2),
+      randomizedQuestions3: createNumberedQuestions(QUESTIONS_3),
+    };
+  }, []);
 
   const onSubmit = (data: FieldValues) => {
     // console.log('Survey results:', data);
@@ -81,6 +212,7 @@ const SurveyPage = () => {
               errors={errors}
               trigger={trigger}
               getValues={getValues}
+              questions={randomizedQuestions2}
               onBack={() => {
                 setCurrentPage(1);
                 scrollToTop();
@@ -96,6 +228,7 @@ const SurveyPage = () => {
               errors={errors}
               trigger={trigger}
               getValues={getValues}
+              questions={randomizedQuestions3}
               onBack={() => {
                 setCurrentPage(2);
                 scrollToTop();

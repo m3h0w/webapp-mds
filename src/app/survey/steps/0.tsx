@@ -22,7 +22,7 @@ const Page0 = ({
   onNext,
   getValues,
 }: Page0Props) => {
-  const assetsToPreload = [
+  let assetsToPreload = [
     'https://storage.googleapis.com/dd-vr-gifs/gifs/High_strong.gif',
     'https://storage.googleapis.com/dd-vr-gifs/gifs/High_weak.gif',
     'https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_strong.gif',
@@ -30,6 +30,15 @@ const Page0 = ({
     'https://storage.googleapis.com/dd-vr-gifs/gifs/Low_strong.gif',
     'https://storage.googleapis.com/dd-vr-gifs/gifs/Low_weak.gif',
   ];
+
+  if (process.env.NODE_ENV === 'development') {
+    assetsToPreload = assetsToPreload.map((asset) =>
+      asset.replace(
+        'https://storage.googleapis.com/dd-vr-gifs/gifs/',
+        'http://localhost:3000/dd/'
+      )
+    );
+  }
 
   const [loadedCount, setLoadedCount] = useState(0);
   const totalAssets = assetsToPreload.length;

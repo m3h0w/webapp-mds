@@ -32,14 +32,21 @@ const Page1 = ({
   };
 
   const questions = useMemo(() => {
+    const isLocalhost = process.env.NODE_ENV === 'development';
     const media1 = [
-      'https://storage.googleapis.com/dd-vr-gifs/gifs/High_strong.gif',
+      isLocalhost
+        ? 'http://localhost:3000/dd/High_strong.gif'
+        : 'https://storage.googleapis.com/dd-vr-gifs/gifs/High_strong.gif',
     ];
     const media2 = [
-      'https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_strong.gif',
+      isLocalhost
+        ? 'http://localhost:3000/dd/Mid_strong.gif'
+        : 'https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_strong.gif',
     ];
     const media3 = [
-      'https://storage.googleapis.com/dd-vr-gifs/gifs/Low_strong.gif',
+      isLocalhost
+        ? 'http://localhost:3000/dd/Low_strong.gif'
+        : 'https://storage.googleapis.com/dd-vr-gifs/gifs/Low_strong.gif',
     ];
     const questionData = [
       {
