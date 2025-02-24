@@ -125,7 +125,7 @@ const Page0 = ({
 
         <div className="mt-4">
           <label htmlFor="format" className="mb-2 block font-medium">
-            Format plików:
+            Format plików (wybiera prowadzący):
           </label>
           <select
             value={format}
