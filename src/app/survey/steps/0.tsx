@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { env } from 'process';
+import { useEffect, useState, useMemo } from 'react';
 import {
   FieldErrors,
   FieldValues,
@@ -13,7 +14,18 @@ interface Page0Props {
   trigger: UseFormTrigger<FieldValues>;
   onNext: () => void;
   getValues: UseFormGetValues<FieldValues>;
+  format: string;
+  setFormat: (format: string) => void;
 }
+
+const assetsToPreload = [
+  'https://storage.googleapis.com/dd-vr-gifs/gifs/High_strong.gif',
+  'https://storage.googleapis.com/dd-vr-gifs/gifs/High_weak.gif',
+  'https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_strong.gif',
+  'https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_weak.gif',
+  'https://storage.googleapis.com/dd-vr-gifs/gifs/Low_strong.gif',
+  'https://storage.googleapis.com/dd-vr-gifs/gifs/Low_weak.gif',
+];
 
 const Page0 = ({
   register,
@@ -21,37 +33,51 @@ const Page0 = ({
   trigger,
   onNext,
   getValues,
+  format,
+  setFormat,
 }: Page0Props) => {
-  let assetsToPreload = [
-    'https://storage.googleapis.com/dd-vr-gifs/gifs/High_strong.gif',
-    'https://storage.googleapis.com/dd-vr-gifs/gifs/High_weak.gif',
-    'https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_strong.gif',
-    'https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_weak.gif',
-    'https://storage.googleapis.com/dd-vr-gifs/gifs/Low_strong.gif',
-    'https://storage.googleapis.com/dd-vr-gifs/gifs/Low_weak.gif',
-  ];
-
-  if (process.env.NODE_ENV === 'development') {
-    assetsToPreload = assetsToPreload.map((asset) =>
-      asset.replace(
-        'https://storage.googleapis.com/dd-vr-gifs/gifs/',
-        'http://localhost:3000/dd/'
-      )
-    );
-  }
-
   const [loadedCount, setLoadedCount] = useState(0);
-  const totalAssets = assetsToPreload.length;
+
+  const formattedAssets = useMemo(() => {
+    let assets = assetsToPreload.map((asset) =>
+      asset.replace('.gif', `.${format}`)
+    );
+
+    if (process.env.NODE_ENV === 'development') {
+      assets = assets.map((asset) =>
+        asset.replace('https://storage.googleapis.com/dd-vr-gifs/gifs/', `/dd/`)
+      );
+    }
+    return assets;
+  }, [format]);
+
+  const totalAssets = formattedAssets.length;
 
   useEffect(() => {
-    assetsToPreload.forEach((asset) => {
-      const img = new Image();
-      img.onload = () => {
-        setLoadedCount((prev) => prev + 1);
-      };
-      img.src = asset;
+    setLoadedCount(0); // Reset counter when format changes
+
+    formattedAssets.forEach((asset) => {
+      if (format === 'mp4') {
+        const video = document.createElement('video');
+        video.preload = 'auto';
+        video.onloadeddata = () => {
+          setLoadedCount((prev) => prev + 1);
+        };
+        video.onerror = (e) => {
+          console.error('Error loading video:', asset, e);
+        };
+        console.log('preloading', asset);
+        video.src = asset;
+      } else {
+        const img = new Image();
+        img.onload = () => {
+          setLoadedCount((prev) => prev + 1);
+        };
+        console.log('preloading', asset);
+        img.src = asset;
+      }
     });
-  }, []);
+  }, [format, formattedAssets]);
 
   const handleNext = async () => {
     const isValid = await trigger('experiment_id');
@@ -96,6 +122,21 @@ const Page0 = ({
             {errors.experiment_id.message as string}
           </p>
         )}
+
+        <div className="mt-4">
+          <label htmlFor="format" className="mb-2 block font-medium">
+            Format plików:
+          </label>
+          <select
+            value={format}
+            onChange={(e) => setFormat(e.target.value)}
+            className="rounded-md border border-gray-300 p-2"
+          >
+            <option value="mp4">MP4</option>
+            <option value="gif">GIF</option>
+            <option value="webp">WebP</option>
+          </select>
+        </div>
       </div>
 
       <div className="mt-8 flex justify-center">

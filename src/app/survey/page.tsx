@@ -99,6 +99,7 @@ const QUESTIONS_3 = [
 
 const SurveyPage = () => {
   const [currentPage, setCurrentPage] = useState(0);
+  const [format, setFormat] = useState('mp4');
   const {
     register,
     handleSubmit,
@@ -126,14 +127,22 @@ const SurveyPage = () => {
         ),
       ];
 
-      // replace urls with local urls if localhost
+      // replace urls with local urls if localhost and update format
       if (process.env.NODE_ENV === 'development') {
         shuffledQuestions.forEach((q) => {
           q.media = q.media.map((m) =>
-            m.replace(
-              'https://storage.googleapis.com/dd-vr-gifs/gifs/',
-              'http://localhost:3000/dd/'
-            )
+            m
+              .replace(
+                'https://storage.googleapis.com/dd-vr-gifs/gifs/',
+                `/dd/`
+              )
+              .replace(/\.(gif|mp4|webp)$/, `.${format}`)
+          );
+        });
+      } else {
+        shuffledQuestions.forEach((q) => {
+          q.media = q.media.map((m) =>
+            m.replace(/\.(gif|mp4|webp)$/, `.${format}`)
           );
         });
       }
@@ -148,7 +157,7 @@ const SurveyPage = () => {
       randomizedQuestions2: createNumberedQuestions(QUESTIONS_2),
       randomizedQuestions3: createNumberedQuestions(QUESTIONS_3),
     };
-  }, []);
+  }, [format]);
 
   const onSubmit = (data: FieldValues) => {
     // console.log('Survey results:', data);
@@ -194,6 +203,8 @@ const SurveyPage = () => {
                 setCurrentPage(1);
                 scrollToTop();
               }}
+              format={format}
+              setFormat={setFormat}
             />
           ) : currentPage === 1 ? (
             <Page1
@@ -205,6 +216,7 @@ const SurveyPage = () => {
                 setCurrentPage(2);
                 scrollToTop();
               }}
+              format={format}
             />
           ) : currentPage === 2 ? (
             <Page2

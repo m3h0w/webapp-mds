@@ -8,7 +8,6 @@ import {
 import { useMemo, useState } from 'react';
 
 import ComparisonQuestion from '../components/ComparisonQuestion';
-import { index } from 'd3';
 
 interface Page1Props {
   register: UseFormRegister<FieldValues>;
@@ -16,6 +15,7 @@ interface Page1Props {
   trigger: UseFormTrigger<FieldValues>;
   onNext: () => void;
   getValues: UseFormGetValues<FieldValues>;
+  format: string;
 }
 
 const Page1 = ({
@@ -24,6 +24,7 @@ const Page1 = ({
   trigger,
   onNext,
   getValues,
+  format,
 }: Page1Props) => {
   const [touchedFields, setTouchedFields] = useState<Set<string>>(new Set());
 
@@ -35,18 +36,18 @@ const Page1 = ({
     const isLocalhost = process.env.NODE_ENV === 'development';
     const media1 = [
       isLocalhost
-        ? 'http://localhost:3000/dd/High_strong.gif'
-        : 'https://storage.googleapis.com/dd-vr-gifs/gifs/High_strong.gif',
+        ? `/dd/High_strong.${format}`
+        : `https://storage.googleapis.com/dd-vr-gifs/gifs/High_strong.${format}`,
     ];
     const media2 = [
       isLocalhost
-        ? 'http://localhost:3000/dd/Mid_strong.gif'
-        : 'https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_strong.gif',
+        ? `/dd/Mid_strong.${format}`
+        : `https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_strong.${format}`,
     ];
     const media3 = [
       isLocalhost
-        ? 'http://localhost:3000/dd/Low_strong.gif'
-        : 'https://storage.googleapis.com/dd-vr-gifs/gifs/Low_strong.gif',
+        ? `/dd/Low_strong.${format}`
+        : `https://storage.googleapis.com/dd-vr-gifs/gifs/Low_strong.${format}`,
     ];
     const questionData = [
       {

@@ -37,6 +37,31 @@ const ComparisonQuestion = ({
     }
   };
 
+  const renderMedia = (src: string, alt: string) => {
+    const isVideo = src.toLowerCase().endsWith('.mp4');
+
+    return isVideo ? (
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 size-full rounded-lg object-cover"
+      >
+        <source src={src} type="video/mp4" />
+      </video>
+    ) : (
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        className="rounded-lg object-cover"
+        loading={'lazy'}
+        unoptimized={true}
+      />
+    );
+  };
+
   return (
     <div
       style={{
@@ -133,14 +158,7 @@ const ComparisonQuestion = ({
               key={`left-${index}`}
               className={`relative aspect-video ${leftMedia.length === 1 ? 'col-span-2 size-full' : ''}`}
             >
-              <Image
-                src={src}
-                alt={`Left comparison ${index + 1}`}
-                fill
-                className="rounded-lg object-cover"
-                loading={'lazy'}
-                unoptimized={true}
-              />
+              {renderMedia(src, `Left comparison ${index + 1}`)}
             </div>
           ))}
         </div>
@@ -154,12 +172,7 @@ const ComparisonQuestion = ({
               key={`right-${index}`}
               className={`relative aspect-video ${rightMedia.length === 1 ? 'col-span-2 size-full' : ''}`}
             >
-              <Image
-                src={src}
-                alt={`Right comparison ${index + 1}`}
-                fill
-                className="rounded-lg object-cover"
-              />
+              {renderMedia(src, `Right comparison ${index + 1}`)}
             </div>
           ))}
         </div>

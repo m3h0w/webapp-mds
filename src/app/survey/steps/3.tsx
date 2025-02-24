@@ -77,6 +77,33 @@ const Page3 = ({
     return questions.every((q) => touchedFields.has(q.name));
   }, [touchedFields, questions]);
 
+  const renderMedia = (src: string, alt: string, index: number) => {
+    const isVideo = src.toLowerCase().endsWith('.mp4');
+
+    return isVideo ? (
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 size-full rounded-lg object-cover"
+      >
+        <source src={src} type="video/mp4" />
+      </video>
+    ) : (
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        className="rounded-lg object-cover"
+        priority={index < 3}
+        loading={index < 3 ? 'eager' : 'lazy'}
+        unoptimized={true}
+        key={'3' + alt + index + refreshKey + 'image'}
+      />
+    );
+  };
+
   return (
     <div className="flex h-[98vh]" key={refreshKey}>
       {/* Left side - GIFs (2/3 width) */}
@@ -97,18 +124,7 @@ const Page3 = ({
               <div className="absolute left-2 top-2 z-10 flex size-8 items-center justify-center rounded-full border border-gray-300 bg-white shadow-md">
                 <span className="text-lg font-bold text-black">{q.number}</span>
               </div>
-              {imagesVisible && (
-                <Image
-                  src={q.media[0]}
-                  alt={q.name}
-                  fill
-                  className="rounded-lg object-cover"
-                  priority={index < 3}
-                  loading={index < 3 ? 'eager' : 'lazy'}
-                  unoptimized={true}
-                  key={'3' + q.name + index + refreshKey + 'image'}
-                />
-              )}
+              {imagesVisible && renderMedia(q.media[0], q.name, index)}
             </div>
           ))}
         </div>
