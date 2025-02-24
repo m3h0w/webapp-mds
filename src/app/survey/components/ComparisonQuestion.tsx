@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FieldValues, UseFormRegister } from 'react-hook-form';
 import Image from 'next/image';
+import ReactPlayer from 'react-player';
 
 interface ComparisonQuestionProps {
   register: UseFormRegister<FieldValues>;
@@ -19,6 +20,52 @@ const marks = [
   { value: 80, label: '' },
   { value: 100, label: 'W bardzo dużym stopniu' },
 ];
+
+import { useEffect, useRef } from 'react';
+
+function VideoCanvas() {
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    if (!canvasRef.current) return;
+    const video = videoRef.current as unknown as HTMLVideoElement;
+    const canvas = canvasRef.current as HTMLCanvasElement;
+    const ctx = canvas.getContext('2d');
+
+    if (!ctx) return;
+
+    const drawFrame = () => {
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      requestAnimationFrame(drawFrame);
+    };
+
+    video.addEventListener('play', () => {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      drawFrame();
+    });
+
+    return () => video.removeEventListener('play', drawFrame);
+  }, []);
+
+  return (
+    <div>
+      <video
+        ref={videoRef}
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
+        style={{ display: 'none' }}
+      >
+        <source src="/video.mp4" type="video/mp4" />
+      </video>
+      <canvas ref={canvasRef} />
+    </div>
+  );
+}
 
 const ComparisonQuestion = ({
   register,
@@ -41,15 +88,40 @@ const ComparisonQuestion = ({
     const isVideo = src.toLowerCase().endsWith('.mp4');
 
     return isVideo ? (
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 size-full rounded-lg object-cover"
-      >
-        <source src={src} type="video/mp4" />
-      </video>
+      <ReactPlayer
+        url={src}
+        playing={true}
+        loop={true}
+        muted={true}
+        playsinline
+        width="100%"
+        height="100%"
+        className="absolute inset-0 rounded-lg"
+        style={{
+          objectFit: 'cover',
+          imageRendering: 'crisp-edges',
+          willChange: 'transform, opacity',
+          backfaceVisibility: 'hidden',
+          transform: 'translateZ(0)',
+          contain: 'strict',
+        }}
+        config={{
+          file: {
+            attributes: {
+              style: {
+                objectFit: 'cover',
+                width: '100%',
+                height: '100%',
+                imageRendering: 'crisp-edges',
+                willChange: 'transform, opacity',
+                backfaceVisibility: 'hidden',
+                transform: 'translateZ(0)',
+                contain: 'strict',
+              },
+            },
+          },
+        }}
+      />
     ) : (
       <Image
         src={src}
@@ -58,6 +130,12 @@ const ComparisonQuestion = ({
         className="rounded-lg object-cover"
         loading={'lazy'}
         unoptimized={true}
+        style={{
+          imageRendering: 'auto',
+          willChange: 'transform, opacity',
+          backfaceVisibility: 'hidden',
+          transform: 'translateZ(0)',
+        }}
       />
     );
   };

@@ -9,6 +9,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 
 import SingleMediaQuestion from '../components/SingleMediaQuestion';
+import ReactPlayer from 'react-player';
 
 interface Page2Props {
   register: UseFormRegister<FieldValues>;
@@ -87,15 +88,40 @@ const Page2 = ({
     const isVideo = src.toLowerCase().endsWith('.mp4');
 
     return isVideo ? (
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 size-full rounded-lg object-cover"
-      >
-        <source src={src} type="video/mp4" />
-      </video>
+      <ReactPlayer
+        url={src}
+        playing={true}
+        loop={true}
+        muted={true}
+        playsinline
+        width="100%"
+        height="100%"
+        className="absolute inset-0 rounded-lg"
+        style={{
+          objectFit: 'cover',
+          imageRendering: 'crisp-edges',
+          willChange: 'transform, opacity',
+          backfaceVisibility: 'hidden',
+          transform: 'translateZ(0)',
+          contain: 'strict',
+        }}
+        config={{
+          file: {
+            attributes: {
+              style: {
+                objectFit: 'cover',
+                width: '100%',
+                height: '100%',
+                imageRendering: 'crisp-edges',
+                willChange: 'transform, opacity',
+                backfaceVisibility: 'hidden',
+                transform: 'translateZ(0)',
+                contain: 'strict',
+              },
+            },
+          },
+        }}
+      />
     ) : (
       <Image
         src={src}
