@@ -15,6 +15,43 @@ interface Page4Props {
   getValues: UseFormGetValues<FieldValues>;
 }
 
+// 'psychedelic_use',
+// 'vr_use',
+// 'eye_dominance',
+// 'experiment_id',
+// 'high_vs_mid',
+// 'high_vs_low',
+// 'mid_vs_low',
+// 'high_strong_psychodelic',
+// 'high_weak_psychodelic',
+// 'mid_strong_psychodelic',
+// 'mid_weak_psychodelic',
+// 'low_strong_psychodelic',
+// 'low_weak_psychodelic',
+// 'high_strong_visual_pleasure',
+// 'high_weak_visual_pleasure',
+// 'mid_strong_visual_pleasure',
+// 'mid_weak_visual_pleasure',
+// 'low_strong_visual_pleasure',
+// 'low_weak_visual_pleasure',
+const field_names_map = {
+  high_vs_mid: 'high_vs_st2',
+  high_vs_low: 'high_vs_st1',
+  mid_vs_low: 'st2_vs_st1',
+  high_strong_psychodelic: 'high_strong_psychodelic',
+  high_weak_psychodelic: 'high_weak_psychodelic',
+  mid_strong_psychodelic: 'st2_strong_psychodelic',
+  mid_weak_psychodelic: 'st2_weak_psychodelic',
+  low_strong_psychodelic: 'st1_strong_psychodelic',
+  low_weak_psychodelic: 'st1_weak_psychodelic',
+  high_strong_visual_pleasure: 'high_strong_visual_pleasure',
+  high_weak_visual_pleasure: 'high_weak_visual_pleasure',
+  mid_strong_visual_pleasure: 'st2_strong_visual_pleasure',
+  mid_weak_visual_pleasure: 'st2_weak_visual_pleasure',
+  low_strong_visual_pleasure: 'st1_strong_visual_pleasure',
+  low_weak_visual_pleasure: 'st1_weak_visual_pleasure',
+};
+
 const Page4 = ({
   register,
   errors,
@@ -45,9 +82,12 @@ const Page4 = ({
     // URL.revokeObjectURL(jsonUrl);
 
     // Download as CSV
-    const csvRows = Object.entries(results_with_date).map(
-      ([key, value]) => `${key},${value}`
-    );
+    const csvRows = Object.entries(results_with_date).map(([key, value]) => {
+      // Convert the key to the desired format
+      const formattedKey =
+        field_names_map[key as keyof typeof field_names_map] || key;
+      return `${formattedKey},${value}`;
+    });
     const csvContent = ['field,value', ...csvRows].join('\n');
     const csvBlob = new Blob([csvContent], { type: 'text/csv' });
     const csvUrl = URL.createObjectURL(csvBlob);
