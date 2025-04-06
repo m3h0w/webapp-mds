@@ -13,21 +13,21 @@ const QUESTIONS_2 = [
   // Strong group (top)
   {
     name: 'high_strong_psychodelic',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/High_strong.gif'],
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs2/High_strong.gif'],
     // number: 1,
     group: 'strong',
     level: 'high',
   },
   {
     name: 'mid_strong_psychodelic',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_strong.gif'],
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs2/Mid_strong.gif'],
     // number: 2,
     group: 'strong',
     level: 'mid',
   },
   {
     name: 'low_strong_psychodelic',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Low_strong.gif'],
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs2/Low_strong.gif'],
     // number: 3,
     group: 'strong',
     level: 'low',
@@ -35,21 +35,21 @@ const QUESTIONS_2 = [
   // Weak group (bottom)
   {
     name: 'high_weak_psychodelic',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/High_weak.gif'],
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs2/High_weak.gif'],
     // number: 4,
     group: 'weak',
     level: 'high',
   },
   {
     name: 'mid_weak_psychodelic',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_weak.gif'],
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs2/Mid_weak.gif'],
     // number: 5,
     group: 'weak',
     level: 'mid',
   },
   {
     name: 'low_weak_psychodelic',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Low_weak.gif'],
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs2/Low_weak.gif'],
     // number: 6,
     group: 'weak',
     level: 'low',
@@ -60,38 +60,38 @@ const QUESTIONS_3 = [
   // Strong group (top)
   {
     name: 'high_strong_visual_pleasure',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/High_strong.gif'],
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs2/High_strong.gif'],
     group: 'strong',
     level: 'high',
   },
   {
     name: 'mid_strong_visual_pleasure',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_strong.gif'],
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs2/Mid_strong.gif'],
     group: 'strong',
     level: 'mid',
   },
   {
     name: 'low_strong_visual_pleasure',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Low_strong.gif'],
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs2/Low_strong.gif'],
     group: 'strong',
     level: 'low',
   },
   // Weak group (bottom)
   {
     name: 'high_weak_visual_pleasure',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/High_weak.gif'],
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs2/High_weak.gif'],
     group: 'weak',
     level: 'high',
   },
   {
     name: 'mid_weak_visual_pleasure',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_weak.gif'],
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs2/Mid_weak.gif'],
     group: 'weak',
     level: 'mid',
   },
   {
     name: 'low_weak_visual_pleasure',
-    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs/Low_weak.gif'],
+    media: ['https://storage.googleapis.com/dd-vr-gifs/gifs2/Low_weak.gif'],
     group: 'weak',
     level: 'low',
   },
@@ -133,7 +133,7 @@ const SurveyPage = () => {
           q.media = q.media.map((m) =>
             m
               .replace(
-                'https://storage.googleapis.com/dd-vr-gifs/gifs/',
+                'https://storage.googleapis.com/dd-vr-gifs/gifs2/',
                 `/dd/`
               )
               .replace(/\.(gif|mp4|webp)$/, `.${format}`)

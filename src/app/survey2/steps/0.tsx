@@ -19,12 +19,12 @@ interface Page0Props {
 }
 
 const assetsToPreload = [
-  'https://storage.googleapis.com/dd-vr-gifs/gifs/High_strong.gif',
-  'https://storage.googleapis.com/dd-vr-gifs/gifs/High_weak.gif',
-  'https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_strong.gif',
-  'https://storage.googleapis.com/dd-vr-gifs/gifs/Mid_weak.gif',
-  'https://storage.googleapis.com/dd-vr-gifs/gifs/Low_strong.gif',
-  'https://storage.googleapis.com/dd-vr-gifs/gifs/Low_weak.gif',
+  'https://storage.googleapis.com/dd-vr-gifs/gifs2/High_strong.gif',
+  'https://storage.googleapis.com/dd-vr-gifs/gifs2/High_weak.gif',
+  'https://storage.googleapis.com/dd-vr-gifs/gifs2/Mid_strong.gif',
+  'https://storage.googleapis.com/dd-vr-gifs/gifs2/Mid_weak.gif',
+  'https://storage.googleapis.com/dd-vr-gifs/gifs2/Low_strong.gif',
+  'https://storage.googleapis.com/dd-vr-gifs/gifs2/Low_weak.gif',
 ];
 
 const Page0 = ({
@@ -45,7 +45,10 @@ const Page0 = ({
 
     if (process.env.NODE_ENV === 'development') {
       assets = assets.map((asset) =>
-        asset.replace('https://storage.googleapis.com/dd-vr-gifs/gifs/', `/dd/`)
+        asset.replace(
+          'https://storage.googleapis.com/dd-vr-gifs/gifs2/',
+          `/dd/`
+        )
       );
     }
     return assets;
