@@ -7,7 +7,7 @@ import Page1 from './steps/1';
 import Page2 from './steps/2';
 import Page3 from './steps/3';
 import Page4 from './steps/4';
-import Page0 from '@/app/survey/steps/0';
+import Page0 from './steps/0';
 
 const QUESTIONS_2 = [
   // Strong group (top)
@@ -128,7 +128,10 @@ const SurveyPage = () => {
       ];
 
       // replace urls with local urls if localhost and update format
-      if (process.env.NODE_ENV === 'development') {
+      if (
+        process.env.NODE_ENV === 'development' &&
+        process.env.NEXT_PUBLIC_USE_BUCKET !== 'true'
+      ) {
         shuffledQuestions.forEach((q) => {
           q.media = q.media.map((m) =>
             m

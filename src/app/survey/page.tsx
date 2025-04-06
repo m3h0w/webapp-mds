@@ -128,7 +128,10 @@ const SurveyPage = () => {
       ];
 
       // replace urls with local urls if localhost and update format
-      if (process.env.NODE_ENV === 'development') {
+      if (
+        process.env.NODE_ENV === 'development' &&
+        process.env.NEXT_PUBLIC_USE_BUCKET !== 'true'
+      ) {
         shuffledQuestions.forEach((q) => {
           q.media = q.media.map((m) =>
             m

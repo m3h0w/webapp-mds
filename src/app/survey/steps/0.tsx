@@ -43,7 +43,10 @@ const Page0 = ({
       asset.replace('.gif', `.${format}`)
     );
 
-    if (process.env.NODE_ENV === 'development') {
+    if (
+      process.env.NODE_ENV === 'development' &&
+      process.env.NEXT_PUBLIC_USE_BUCKET !== 'true'
+    ) {
       assets = assets.map((asset) =>
         asset.replace('https://storage.googleapis.com/dd-vr-gifs/gifs/', `/dd/`)
       );

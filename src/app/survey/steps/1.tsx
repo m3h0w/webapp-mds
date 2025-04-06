@@ -33,7 +33,9 @@ const Page1 = ({
   };
 
   const questions = useMemo(() => {
-    const isLocalhost = process.env.NODE_ENV === 'development';
+    const isLocalhost =
+      process.env.NODE_ENV === 'development' &&
+      process.env.NEXT_PUBLIC_USE_BUCKET !== 'true';
     const media1 = [
       isLocalhost
         ? `/dd/High_strong.${format}`
