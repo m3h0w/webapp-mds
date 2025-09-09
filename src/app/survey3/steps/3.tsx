@@ -32,7 +32,6 @@ const PYTANIE =
 
 const Page3 = ({
   register,
-  // errors,
   trigger,
   onBack,
   onNext,
@@ -193,13 +192,10 @@ const Page3 = ({
             ))}
         </div>
 
-        <div className="fixed bottom-10 right-10 mt-8 flex justify-between pt-8">
+        <div className="fixed bottom-10 right-10 mt-8 flex justify-between gap-4 pt-8">
           <button
             type="button"
             onClick={onBack}
-            style={{
-              opacity: 0,
-            }}
             className="rounded-md bg-gray-500 px-4 py-2 text-white transition-colors hover:bg-gray-600"
           >
             Wstecz

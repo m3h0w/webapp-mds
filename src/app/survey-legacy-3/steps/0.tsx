@@ -19,7 +19,6 @@ interface Page0Props {
 
 const assetsToPreload = [
   'https://storage.googleapis.com/dd-vr-gifs/gifs2/High_strong.gif',
-  'https://storage.googleapis.com/dd-vr-gifs/gifs2/Mid_strong.gif',
 ];
 
 const Page0 = ({

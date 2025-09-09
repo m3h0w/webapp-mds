@@ -32,6 +32,7 @@ const PYTANIE =
 
 const Page2 = ({
   register,
+  // errors,
   trigger,
   onBack,
   onNext,
@@ -47,7 +48,7 @@ const Page2 = ({
   };
 
   const handleNext = async () => {
-    const fields = questions.map((q) => q.name);
+    const fields = ['high_strong_psychodelic'];
 
     const formValues = await trigger(fields);
 
@@ -190,10 +191,13 @@ const Page2 = ({
             ))}
         </div>
 
-        <div className="fixed bottom-10 right-10 mt-14 flex justify-between gap-4 pt-4">
+        <div className="fixed bottom-10 right-10 mt-14 flex justify-between pt-4">
           <button
             type="button"
             onClick={onBack}
+            style={{
+              opacity: 0,
+            }}
             className="rounded-md bg-gray-500 px-4 py-2 text-white transition-colors hover:bg-gray-600"
           >
             Wstecz

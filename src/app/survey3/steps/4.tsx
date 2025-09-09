@@ -15,25 +15,6 @@ interface Page4Props {
   getValues: UseFormGetValues<FieldValues>;
 }
 
-// 'psychedelic_use',
-// 'vr_use',
-// 'eye_dominance',
-// 'experiment_id',
-// 'high_vs_mid',
-// 'high_vs_low',
-// 'mid_vs_low',
-// 'high_strong_psychodelic',
-// 'high_weak_psychodelic',
-// 'mid_strong_psychodelic',
-// 'mid_weak_psychodelic',
-// 'low_strong_psychodelic',
-// 'low_weak_psychodelic',
-// 'high_strong_visual_pleasure',
-// 'high_weak_visual_pleasure',
-// 'mid_strong_visual_pleasure',
-// 'mid_weak_visual_pleasure',
-// 'low_strong_visual_pleasure',
-// 'low_weak_visual_pleasure',
 const field_names_map = {
   high_vs_mid: 'high_vs_st2',
   high_vs_low: 'high_vs_st1',
@@ -70,16 +51,6 @@ const Page4 = ({
     };
 
     const experiment_id = results.experiment_id;
-
-    // Download as JSON
-    // const jsonData = JSON.stringify(results_with_date, null, 2);
-    // const jsonBlob = new Blob([jsonData], { type: 'application/json' });
-    // const jsonUrl = URL.createObjectURL(jsonBlob);
-    // const jsonLink = document.createElement('a');
-    // jsonLink.href = jsonUrl;
-    // jsonLink.download = `survey_results_${experiment_id}.json`;
-    // jsonLink.click();
-    // URL.revokeObjectURL(jsonUrl);
 
     // Download as CSV
     const csvRows = Object.entries(results_with_date).map(([key, value]) => {
@@ -122,11 +93,9 @@ const Page4 = ({
         >
           Pobierz wyniki jeszcze raz
         </button>
-        {/* restart survey */}
         <button
           className="rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
           onClick={() => {
-            // refresh the page
             window.location.reload();
           }}
         >
@@ -244,38 +213,13 @@ const Page4 = ({
             </p>
           )}
         </div>
-
-        {/* <div>
-          <label htmlFor="experimentId" className="mb-2 block font-medium">
-            ID eksperymentu:*
-          </label>
-          <input
-            type="text"
-            {...register('experimentId', {
-              required: 'To pole jest wymagane',
-              pattern: {
-                value: /^[0-9]{2}$/,
-                message: 'ID musi być w formacie 01-99',
-              },
-            })}
-            className="w-20 rounded-md border border-gray-300 p-2"
-            placeholder="01-99"
-          />
-          {errors.experimentId && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.experimentId.message as string}
-            </p>
-          )}
-        </div> */}
       </div>
-
-      {/* <p className="mt-8 text-center">Serdecznie dziękujemy za udział!</p> */}
 
       <div className="mt-8 flex justify-center gap-4">
         <button
           type="button"
           onClick={onBack}
-          className="rounded-md bg-gray-500 px-4 py-2 text-white opacity-0 transition-colors hover:bg-gray-600"
+          className="rounded-md bg-gray-500 px-4 py-2 text-white transition-colors hover:bg-gray-600"
         >
           Wstecz
         </button>
@@ -283,27 +227,17 @@ const Page4 = ({
           type="submit"
           onClick={async (e: any) => {
             await handleSubmit(e);
-            // check if valid
+            // check if valid for survey4 fields only
             const isValid = await trigger([
               'psychedelic_use',
               'vr_use',
               'eye_dominance',
               'experiment_id',
               'high_vs_mid',
-              'high_vs_low',
-              'mid_vs_low',
               'high_strong_psychodelic',
-              'high_weak_psychodelic',
               'mid_strong_psychodelic',
-              'mid_weak_psychodelic',
-              'low_strong_psychodelic',
-              'low_weak_psychodelic',
               'high_strong_visual_pleasure',
-              'high_weak_visual_pleasure',
               'mid_strong_visual_pleasure',
-              'mid_weak_visual_pleasure',
-              'low_strong_visual_pleasure',
-              'low_weak_visual_pleasure',
             ]);
             if (isValid) {
               setDone(true);
